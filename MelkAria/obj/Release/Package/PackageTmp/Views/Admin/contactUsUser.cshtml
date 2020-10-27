@@ -1,0 +1,137 @@
+﻿@model MelkAria.ViewModels.contactUsUser.contactUsUserViewModel
+@{
+    ViewBag.Title = "contactUsUser";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">اطلاعات تماس با ما کاربران</h4>
+        
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جستجو</h4>
+                    <div class="row" id="SearchcontactUsUser">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>ایمیل</label>
+                                <input type="text" class="form-control" id="emailSearch" name="emailSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>موبایل</label>
+                                <input type="text" class="form-control" id="mobileSearch" name="mobileSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+
+                                <button class="btn btn-success" onclick="SearchcontactUsUser()"> جستجو</button>
+                                <button class="btn btn-info" onclick="ShowAllcontactUsUser()"> نمایش همه</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">اطلاعات تماس با ما کاربران</h4>
+
+                <div id="contactUsUserBody" class="table-responsive">
+                    @Html.Action("LoadcontactUsUserData", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-contactUsUser-add" tabindex="-1">
+    <div class="modal-dialog modal-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="contactUsUser-header" class="modal-title pull-left"> رنگ جدید</h5>
+            </div>
+            <div class="modal-body">
+                <form id="contactUsUserAdd">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="PageNumber" />
+                    @Html.TextBoxFor(m => m.id, new { type = "hidden", @class = "form-control" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.email)
+                        @Html.TextBoxFor(m => m.email, new { placeholder = "ایمیل ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.email, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.mobile)
+                        @Html.TextBoxFor(m => m.mobile, new { placeholder = "موبایل", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.mobile, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.message)
+                        @Html.TextAreaFor(m => m.message, new { placeholder = "پیام", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.message, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">بستن</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+@section scripts{
+
+    <script>
+                $('#modal-contactUsUser-add').on('hidden.bs.modal', function () {
+                    $('#modal-contactUsUser-add').find('input,textarea,select').each(function (key) {
+                        if ($(this).attr('id') == "id") {
+                            $(this).val(0);
+                        }
+                        else
+                            if ($(this).attr('name') != '__RequestVerificationToken')
+                                $(this).val('');
+                    })
+                })
+
+    </script>
+    <script>
+                function SearchcontactUsUser() {
+                    $("#contactUsUserBody").html('');
+                    var mobile = $("#SearchcontactUsUser #mobileSearch").val();
+                    var email = $("#SearchcontactUsUser #emailSearch").val();
+                    $.ajax({
+                        url: "/Admin/LoadcontactUsUserData",
+                        method: "GET",
+                        data: {
+                            mobile: mobile,
+                            email: email,
+                        },
+                        success: function (data) {
+                            $("#contactUsUserBody").html(data);
+                        }
+                    });
+                }
+                function ShowAllcontactUsUser()
+                {
+                    $("#contactUsUserBody").html('');
+                    $('#SearchcontactUsUser').find('input,textarea,select').each(function () {
+                        $(this).val('');
+                    })
+                    $("#contactUsUserBody").load('@Url.Action("LoadcontactUsUserData")');
+                }
+    </script>
+
+}

@@ -1,0 +1,217 @@
+﻿@model MelkAria.ViewModels.User.UpdateProfileViewModel
+@{
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<section id="sectionHome">
+    <div class="container">
+        <div class="row_custom">
+            <div class="column-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">صفحه نخست</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">پروفایل</li>
+                    </ol>
+                </nav>
+                <div class="card card_spec" id="new-melk">
+                    @*<div class="card-header clearfix">
+                            <div class="float-left"><span class="fs-18 d-block">مهرداد حسینی</span><b class="color_light">منزل مسکونی دو طبقه</b></div>
+                            <div class="date float-right color_light">۳ روز پیش</div>
+                        </div>
+                        <div class="card-body">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</div>*@
+                </div>
+                <div class="card flex-none card-none card_profile">
+                    <div class="card-header">
+                        <h4 class="card-title card_title">آگهی های من</h4>
+                    </div>
+                    <div class="card-body text-justify p-0">
+                        <div class="row_custom">
+                            @foreach (var item in Model.melks)
+                            {
+                                <div class="column-md-6">
+                                    <figure class="card card_category flex-none">
+                                        <a class="card-image" href="/Home/Single?name=@item.title.Replace(' ', '-')"><img src="@item.imageUrl" alt="@item.title"></a>
+                                        <figcaption class="card-body">
+                                            <a class="fs-20 card-title" href="/Home/Single?name=@item.title.Replace(' ', '-')">@item.title</a>
+                                            <p class="card-text">املاک آریا:09139200042</p>
+                                            @if (item.status.Equals(MelkAria.Models.EnumStatus.Accept))
+                                            {
+                                                <p class="fs-20 card_price">تایید شده</p>
+                                            }
+                                            @if (item.status.Equals(MelkAria.Models.EnumStatus.NotAccept))
+                                            {
+                                                <p class="fs-20 card_price">تایید نشده</p>
+                                            }
+                                            @if (item.status.Equals(MelkAria.Models.EnumStatus.Pending))
+                                            {
+                                                <p class="fs-20 card_price">در انتظار تایید</p>
+                                            }
+                                            <p class="card-text">@item.confirmDescription</p>
+                                            <p class="card-text">تعداد بازدید @item.ViewCount</p>
+                                            <p class="card-text">کد آگهی @item.code</p>
+                                            <p class="card-text">@item.description</p>
+                                            @if (item.IsRahn)
+                                            {
+                                                if (item.Tavafoghi == true)
+                                                {
+                                                    <span class="card_price">
+                                                        توافقی
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="card_price">
+                                                        @String.Format("{0:0,0}", item.price) قیمت اجاره به تومان
+                                                    </span>
+                                                    <span class="card_price">
+                                                        @String.Format("{0:0,0}", item.priceRahn) قیمت رهن به تومان
+                                                    </span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (item.Tavafoghi == true)
+                                                {
+                                                    <span class="card_price">
+                                                        توافقی
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="card_price">
+                                                        @String.Format("{0:0,0}", item.price) تومان
+                                                    </span>
+
+                                                }
+                                            }
+                                            <hr class="card_line">
+                                            <ul class="list_info">
+                                                <li> <span>طبقه</span><i>@item.floorCount</i></li>
+                                                <li><span>متراژ</span><i>@item.metraj</i></li>
+                                                <li><span>اتاق</span><i>@item.roomCount</i></li>
+                                                <li> <button class="btn btn-primary mt-4" onclick="NewMelk(@item.id,true)">ویرایش</button></li>
+                                                @if (item.status != MelkAria.Models.EnumStatus.Accept)
+                                                {
+                                                <li> <button class="btn btn-primary mt-4" onclick="DeleteMelk(@item.id)">حذف</button></li>
+                                                }
+                                                <li> <button class="btn btn-primary mt-4" onclick="AllPhoto(@item.id)">عکس ها</button></li>
+
+                                            </ul>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column-md-4">
+                <div class="card card_name flex-none">
+                    <div class="card-header">
+                        <h5 class="card-title">پروفایل</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list_stat">
+                            <li> <span>تعداد کل آگهی های شما</span><b>@Model.melks.Count()</b></li>
+                            <li onclick="NewMelk(null,true)"> <span>آگهی جدید رهن و اجاره</span><b></b></li>
+                            <li onclick="NewMelk(null,false)"> <span>آگهی جدید خرید و فروش</span><b></b></li>
+
+                        </ul>
+                    </div>
+                </div>
+                @*<div class="card card_name flex-none mt-3">
+                        <div class="card-header">
+                            <h5 class="card-title">تنظیمات</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list_stat">
+                                <li>اعلان ها و پیام ها</li>
+                                <li>تغییر اطلاعات حساب کاربری</li>
+                                <li>تغییر تصاویر</li>
+                            </ul>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+@section scripts
+{
+
+    @*<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+        <script src="~/Scripts/jquery.validate.js"></script>
+
+        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+        <script src="~/Scripts/NewFolder1/jquery.validate.min.js"></script>
+
+        <script src="~/Scripts/NewFolder1/jquery-validation-unobtrusive.min.js"></script>
+        <script src="~/Scripts/NewFolder1/jquery.unobtrusive-ajax.min.js"></script>*@
+
+    <script>
+
+        function AllPhoto(id) {
+            $.ajax({
+                url: "/Home/AddAditionalmelk?id=" + id,
+                method: "POST",
+
+                success: function (data) {
+                    $("#new-melk").html(data);
+                    $('html,body').animate({
+                        scrollTop: $("#sectionHome").offset().top
+                    }, 'slow');
+
+                },
+                error: function () {
+                    alert("Ajax call failed");
+                }
+            })
+        }
+        function NewMelk(e,f) {
+            //$.ajax({
+            //    url: "/User/NewMelk?id=" + e,
+            //    method: "GET",
+            //    success: function (data) {
+            //        $("#new-melk").html(data);
+
+            //        $('html,body').animate({
+            //            scrollTop: $("#sectionHome").offset().top
+            //        }, 'slow');
+            //    }
+            //});
+
+            var url = '@Url.Action("NewMelk", "User", new { id = "__id__",isRahn="__isRahn__" })';
+
+            window.location.href = url.replace('__id__', e).replace('__isRahn__', f);
+
+
+        }
+        function DeleteMelk(e) {
+            $.ajax({
+                url: "/Home/Deletemelk?id=" + e,
+                method: "POST",
+                success: function (data) {
+                    if (data == "Done") {
+                        swal({
+                            title: '!  موفقیت آمیز',
+                            text: 'حذف مورد انتخابی با موفقیت انجام شد',
+                            type: 'success',
+                            buttonsStyling: false,
+                            confirmButtonClass: 'btn btn-sm btn-light',
+                            background: 'rgba(0, 0, 0, 0.96)',
+                            
+                        })
+                        window.location.href = '@Url.Action("Profile", "User")'
+
+                    }
+                },
+                error: function () {
+                    alert("Ajax call failed");
+                }
+            })
+        }
+
+    </script>
+
+}

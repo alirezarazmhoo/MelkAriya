@@ -1,0 +1,59 @@
+﻿@model MelkAria.ViewModels.aboutUs.aboutUsViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content__inner content__inner--sm">
+    <header class="content__title">
+        <h1>درباره ما</h1>
+    </header>
+
+    <div class="card new-contact">
+        <form action="~/Admin/UpdateaboutUs" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input hidden id="id" value="@Model.id" name="id" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.title)
+                            @Html.TextBoxFor(m => m.title, new { placeholder = "عنوان", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.title, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.author)
+                            @Html.TextBoxFor(m => m.author, new { placeholder = "نویسنده ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.author, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.androidVersion)
+                            @Html.TextBoxFor(m => m.androidVersion, new { placeholder = "ورژن اندروید ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.androidVersion, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.description)
+                            @Html.TextAreaFor(m => m.description, new { placeholder = "توضیحات ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.description, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="mt-5 text-center">
+                    <button type="submit" class="btn btn-primary">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

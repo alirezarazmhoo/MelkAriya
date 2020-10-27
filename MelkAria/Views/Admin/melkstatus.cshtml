@@ -1,0 +1,177 @@
+﻿@model MelkAria.ViewModels.melkstatus.melkstatusViewModel
+@{
+    ViewBag.Title = "melkstatus";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">وضعیت ملک</h4>
+        <button style="margin-bottom:20px;" class="btn btn-primary" data-toggle="modal" data-target="#modal-melkstatus-add">جدید</button>
+
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جستجو</h4>
+                    <div class="row" id="Searchmelkstatus">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>عنوان</label>
+                                <input type="text" class="form-control" id="titleSearch" name="titleSearch" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+
+                                <button class="btn btn-success" onclick="Searchmelkstatus()"> جستجو</button>
+                                <button class="btn btn-info" onclick="ShowAllmelkstatus()"> نمایش همه</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">وضعیت ملک</h4>
+
+                <div id="melkstatusBody" class="table-responsive">
+                    @Html.Action("LoadmelkstatusData", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-melkstatus-add" tabindex="-1">
+    <div class="modal-dialog modal-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="melkstatus-header" class="modal-title pull-left"> وضعیت ملک جدید</h5>
+            </div>
+            <div class="modal-body">
+                <form id="melkstatusAdd">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="PageNumber" />
+                    @Html.TextBoxFor(m => m.id, new { type = "hidden", @class = "form-control" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.title)
+                        @Html.TextBoxFor(m => m.title, new { placeholder = "عنوان ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.title, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-link">ذخیره</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">بستن</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+
+    <script>
+                $('#modal-melkstatus-add').on('hidden.bs.modal', function () {
+                    $('#modal-melkstatus-add').find('input,textarea,select').each(function (key) {
+                        if ($(this).attr('id') == "id") {
+                            $(this).val(0);
+                        }
+                        else
+                            if ($(this).attr('name') != '__RequestVerificationToken')
+                                $(this).val('');
+                    })
+                })
+                $("#melkstatusAdd").submit(function (event) {
+                    event.preventDefault();
+                    var pagenumber = $("#PageNumber").val();
+                    var form = $(this).serialize();
+
+                    $.ajax({
+                        url: "/Admin/Addmelkstatus",
+                        method: "POST",
+                        data: form,
+
+                        success: function (data) {
+                            $('#modal-melkstatus-add').modal('hide');
+                            var messageText = "";
+                            if ($('#modal-melkstatus-add #id').val() != '' && $('#modal-melkstatus-add #id').val() != 0) {
+                                messageText = 'ویرایش  وضعیت ملک با موفقیت انجام شد';
+
+                                $("#melkstatusBody").load('@Url.Action("LoadmelkstatusData")?page=' + pagenumber, function () {
+                                    $("#melkstatusBody").find('.pagination').find('.page-item').removeClass('active');
+                                    $("#melkstatusBody").find('.pagination').find('li:nth-child(' + pagenumber + ')').addClass('active');
+                                });
+
+                            }
+                            else {
+                                messageText = 'اضافه کردن وضعیت ملک با موفقیت انجام شد';
+                                $('.pagination').find('.page-item').removeClass('active');
+                                $('.pagination').find('.page-item').first().addClass('active');
+                            $("#melkstatusBody").load('@Url.Action("LoadmelkstatusData")?page=' + 1);
+
+                            }
+
+                            swal({
+                                title: '!  موفقیت آمیز',
+                                text: messageText,
+                                type: 'success',
+                                buttonsStyling: false,
+                                confirmButtonClass: 'btn btn-sm btn-light',
+                                background: 'rgba(0, 0, 0, 0.96)'
+                            })
+
+                        },
+                        error: function () {
+                            alert("Ajax call failed");
+                        }
+                    })
+                });
+
+    </script>
+    <script>
+
+                //function AddPage(number,e)
+                //{
+                //    $(e).parent().parent().append("<li class='page-item'><a class='page-link' onclick='ChangePage(" + number + ")'>" + number+"</a></li>");
+                //}
+    </script>
+    <script>
+                function Searchmelkstatus() {
+                    $("#melkstatusBody").html('');
+                    var title = $("#Searchmelkstatus #titleSearch").val();
+                    $.ajax({
+                        url: "/Admin/LoadmelkstatusData",
+                        method: "GET",
+                        data: {
+                            title: title,
+                            
+                        },
+
+                        success: function (data) {
+                            $("#melkstatusBody").html(data);
+                        }
+                    });
+                }
+                function ShowAllmelkstatus()
+                {
+                    $("#melkstatusBody").html('');
+                    $('#Searchmelkstatus').find('input,textarea,select').each(function () {
+
+                        $(this).val('');
+                    })
+                    $("#melkstatusBody").load('@Url.Action("LoadmelkstatusData")');
+                }
+    </script>
+
+}

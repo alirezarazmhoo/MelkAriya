@@ -1,0 +1,740 @@
+﻿@model MelkAria.ViewModels.melk.melkViewModel
+@{
+    ViewBag.Title = "melk";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card" id="content">
+    <div class="card-body">
+        <h4 class="card-title">ملک</h4>
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">اطلاعات ملک</h4>
+                    <form action="~/Admin/Addmelk" method="post" id="addmelkForm" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="PageNumber" />
+                        <label>@Model.code</label>
+                        @Html.TextBoxFor(m => m.id, new { type = "hidden", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.lon, new { type = "hidden", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.lat, new { type = "hidden", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.IsRahn, new { type = "hidden", @class = "form-control" })
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.title)
+                                    @Html.TextBoxFor(m => m.title, new { placeholder = "عنوان متن آگهی ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.title, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>کاربر</label>
+                                    <select class="form-control" id="userId" name="userId">
+                                        <option value=""> انتخاب کنید </option>
+                                        @foreach (var item in Model.users)
+                                        {
+                                            if (item.id == Model.userId)
+                                            {
+                                                <option selected value="@item.id"> @item.mobile </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.id"> @item.mobile </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>نوع ملک</label>
+                                    <select class="form-control" id="kind" name="kind">
+                                        <option value=""> انتخاب کنید </option>
+                                        @foreach (var item in Enum.GetValues(typeof(MelkAria.Models.EnumMelkKind)))
+                                        {
+
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Edari))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Edari)
+                                                {
+                                                    <option value="2" selected> اداری </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="2"> اداری </option>
+
+                                                }
+                                            }
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Maskooni))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Maskooni)
+                                                {
+                                                    <option value="3" selected> مسکونی </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="3"> مسکونی </option>
+
+                                                }
+                                            }
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Tejari))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Tejari)
+                                                {
+                                                    <option value="1" selected> تجاری </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="1"> تجاری </option>
+
+                                                }
+
+                                            }
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Apartment))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Apartment)
+                                                {
+                                                    <option value="4" selected> آپارتمان </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="4"> آپارتمان </option>
+
+                                                }
+
+                                            }
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Zamin))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Zamin)
+                                                {
+                                                    <option value="5" selected> زمین </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="5"> زمین </option>
+
+                                                }
+
+                                            }
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Sanati))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Sanati)
+                                                {
+                                                    <option value="6" selected> صنعتی </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="6"> صنعتی </option>
+
+                                                }
+
+                                            }
+                                            if (item.Equals(MelkAria.Models.EnumMelkKind.Keshavarzi))
+                                            {
+                                                if (Model.kind == MelkAria.Models.EnumMelkKind.Keshavarzi)
+                                                {
+                                                    <option value="7" selected> کشاورزی </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="7"> کشاورزی </option>
+
+                                                }
+
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.tell)
+                                    @Html.TextBoxFor(m => m.tell, new { placeholder = "تلفن ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.tell, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                @Html.LabelFor(m => m.yearProduce)
+                                @Html.TextBoxFor(m => m.yearProduce, new { placeholder = "سال ساخت ", @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.yearProduce, "", new { @class = "validationMessage" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @*<div class="col-md-4">
+            <div class="form-group">
+                <div class="icon-toggle">
+                    <input type="checkbox" id="isYard" name="isYard" />
+                    <i class="zmdi zmdi-check"></i>
+                </div>
+                <label for="isYard">حیاط دارد</label>
+            </div>
+        </div>*@
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.heatingKind)
+                                    @Html.TextBoxFor(m => m.heatingKind, new { placeholder = "وسیله گرمایشی ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.heatingKind, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.CoolKind)
+                                    @Html.TextBoxFor(m => m.CoolKind, new { placeholder = "وسیله سرمایشی ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.CoolKind, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.floorKind)
+                                    @Html.TextBoxFor(m => m.floorKind, new { placeholder = "نوع کفپوش ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.floorKind, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.cellingKind)
+                                    @Html.TextBoxFor(m => m.cellingKind, new { placeholder = "نوع سقف ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.cellingKind, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Skeletontype)
+                                    @Html.TextBoxFor(m => m.Skeletontype, new { placeholder = "نوع اسکلت ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.Skeletontype, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.parkingKind)
+                                    @Html.TextBoxFor(m => m.parkingKind, new { placeholder = "نوع پارکینگ ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.parkingKind, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.roomCount)
+                                    <select class="form-control" id="roomCount" name="roomCount">
+                                        <option value=""> انتخاب کنید </option>
+                                        @if (Model.roomCount == 1)
+                                        {
+                                            <option value="1" selected> 1 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="1"> 1 </option>
+                                        }
+                                        @if (Model.roomCount == 2)
+                                        {
+                                            <option value="2" selected> 2 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="2"> 2 </option>
+                                        }
+                                        @if (Model.roomCount == 3)
+                                        {
+                                            <option value="3" selected> 3 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="3"> 3 </option>
+                                        }
+                                        @if (Model.roomCount == 4)
+                                        {
+                                            <option value="4" selected> 4 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="4"> 4 </option>
+                                        }
+                                        @if (Model.roomCount == 5)
+                                        {
+                                            <option value="5" selected> 5 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="5"> 5 </option>
+                                        }
+                                        @if (Model.roomCount == 6)
+                                        {
+                                            <option value="6" selected> 6 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="6"> 6 </option>
+                                        }
+                                        @if (Model.roomCount == 7)
+                                        {
+                                            <option value="7" selected> 7 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="7"> 7 </option>
+                                        }
+                                        @if (Model.roomCount == 8)
+                                        {
+                                            <option value="8" selected> 8 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="8"> 8 </option>
+                                        }
+                                        @if (Model.roomCount == 9)
+                                        {
+                                            <option value="9" selected> 9 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="9"> 9 </option>
+                                        }
+                                        @if (Model.roomCount == 10)
+                                        {
+                                            <option value="10" selected> 10 </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="10"> 10 </option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.metraj)
+                                    @Html.TextBoxFor(m => m.metraj, new { placeholder = "متراژ ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.metraj, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                            @if (Model.IsRahn == true)
+                            {
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price" class="active">قیمت اجاره</label>
+                                        @Html.TextBoxFor(m => m.price, new { placeholder = "قیمت ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.price, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price" class="active">قیمت رهن</label>
+                                        @Html.TextBoxFor(m => m.priceRahn, new { placeholder = "قیمت ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.priceRahn, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="price" class="active">قیمت خرید یا فروش</label>
+                                        @Html.TextBoxFor(m => m.price, new { placeholder = "قیمت ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.price, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="Pricepersquaremeter" class="active">قیمت هر متر  </label>
+                                        @Html.TextBoxFor(m => m.Pricepersquaremeter, new { placeholder = "قیمت هر متر ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Pricepersquaremeter, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.floorCount)
+                                    @Html.TextBoxFor(m => m.floorCount, new { placeholder = "تعداد طبقه ", @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.floorCount, "", new { @class = "validationMessage" })
+                                    <i class="form-group__bar"></i>
+                                </div>
+                            </div>
+                                @if (!Model.IsRahn)
+                                {
+                                    <div class="col-xs-12 col-sm-4">
+                                        <label>نوع سند</label>
+                                        <select class="form-control  selectpicker" id="sanad" name="sanad" required="required">
+                                            <option value=""> انتخاب کنید </option>
+                                            @foreach (var item in Enum.GetValues(typeof(MelkAria.Models.EnumSanad)))
+                                            {
+
+                                                if (item.Equals(MelkAria.Models.EnumSanad.Aady))
+                                                {
+                                                    if (Model.sanad == MelkAria.Models.EnumSanad.Aady)
+                                                    {
+                                                        <option value="3" selected> عادی </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="3"> عادی </option>
+
+                                                    }
+                                                }
+                                                if (item.Equals(MelkAria.Models.EnumSanad.Mosha))
+                                                {
+                                                    if (Model.sanad == MelkAria.Models.EnumSanad.Mosha)
+                                                    {
+                                                        <option value="2" selected> مشاع </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="2"> مشاع </option>
+
+                                                    }
+                                                }
+                                                if (item.Equals(MelkAria.Models.EnumSanad.ShishDong))
+                                                {
+                                                    if (Model.sanad == MelkAria.Models.EnumSanad.ShishDong)
+                                                    {
+                                                        <option value="1" selected> شش دانگ </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="1"> شش دانگ </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                        @Html.ValidationMessageFor(m => m.sanad, "", new { @class = "validationMessage" })
+
+                                    </div>
+                                }
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.address)
+                                        @Html.TextAreaFor(m => m.address, new { placeholder = "آدرس ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.address, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.imageUrl)
+                                        @Html.TextBoxFor(m => m.imageUrl, new { @type = "file", @onchange = "setImage()", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.imageUrl, "", new { @class = "validationMessage" })
+                                        <br />
+                                        <img id="imgUpload" width="100" height="100" src="@Model.imageUrl" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.description)
+                                        @Html.TextAreaFor(m => m.description, new { placeholder = "توضیحات ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.description, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.ensheabat)
+                                        @Html.TextAreaFor(m => m.ensheabat, new { placeholder = "انشعابات ", @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.ensheabat, "", new { @class = "validationMessage" })
+                                        <i class="form-group__bar"></i>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:15px;">
+
+                                    <div class="col-xs-6 col-sm-2" id="Tavafoghi-container">
+                                        <label class="checkbox" for="Tavafoghi">
+                                            @if (Model.Tavafoghi == true)
+                                            {
+                                                <input type="checkbox" id="Tavafoghi" name="Tavafoghi" checked>}
+
+                                            else
+                                            {
+                                                <input type="checkbox" id="Tavafoghi" name="Tavafoghi">
+
+                                            }توافقی
+                                        </label>
+                                    </div>
+                             
+                                    <div class="col-xs-6 col-sm-2" id="Isswimmingpool-container">
+                                        <label class="checkbox" for="Isswimmingpool">
+                                            @if (Model.Isswimmingpool == true)
+                                            {
+                                                <input type="checkbox" id="Isswimmingpool" name="Isswimmingpool" checked>}
+
+                                            else
+                                            {
+                                                <input type="checkbox" id="Isswimmingpool" name="Isswimmingpool">
+
+                                            }دارای استخر
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-2" id="IsParking-container">
+                                        <label class="checkbox" for="IsParking">
+                                            @if (Model.IsParking == true)
+                                            {
+                                                <input type="checkbox" id="IsParking" name="IsParking" checked>}
+
+                                            else
+                                            {
+                                                <input type="checkbox" id="IsParking" name="IsParking">
+
+                                            } دارای پارکینگ
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-2" id="IsElevator-container">
+                                        <label class="checkbox" for="IsElevator">
+                                            @if (Model.IsElevator == true)
+                                            {
+                                                <input type="checkbox" id="IsElevator" name="IsElevator" checked>}
+
+                                            else
+                                            {
+                                                <input type="checkbox" id="IsElevator" name="IsElevator">
+
+                                            } دارای آسانسور
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-2" id="IsJacuzzi-container">
+                                        <label class="checkbox" for="IsJacuzzi">
+                                            @if (Model.IsJacuzzi == true)
+                                            {
+                                                <input type="checkbox" id="IsJacuzzi" name="IsJacuzzi" checked>}
+
+                                            else
+                                            {
+                                                <input type="checkbox" id="IsJacuzzi" name="IsJacuzzi">
+
+                                            } دارای جکوزی
+                                        </label>
+                                    </div>
+                                    @if (Model.IsRahn)
+                                    {
+                                        <div class="col-xs-6 col-sm-2" id="Ghabeletabdil-container">
+                                            <label class="checkbox" for="Ghabeletabdil">
+                                                @if (Model.Ghabeletabdil == true)
+                                                {
+                                                    <input type="checkbox" id="Ghabeletabdil" name="Ghabeletabdil" checked>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="Ghabeletabdil" name="Ghabeletabdil">
+                                                }قابل تبدیل
+                                            </label>
+
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+                            @*<div class="row">
+            <div class="col-md-12">
+                <div id='map' style='width: 800px; height: 500px;'></div>
+
+            </div>
+        </div>*@
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">ذخیره و ثبت عکس های دیگر</button>
+                            </div>
+</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function setImage() {
+        var myURL = window.URL || window.webkitURL;
+        var fileURL = myURL.createObjectURL(imageUrl.files[0]);
+        imgUpload.src = fileURL;
+    }
+</script>
+
+
+@*<script type="text/javascript">
+        L.cedarmaps.accessToken = "ed604cd5b75ac67631f9071a5c01963e7080c17a"; // See the note below on how to get an access token
+
+            // Getting maps info from a tileJSON source
+            var tileJSONUrl = 'https://api.cedarmaps.com/v1/tiles/cedarmaps.streets.json?access_token=' + L.cedarmaps.accessToken;
+
+            // initilizing map into div#map
+            var map = L.cedarmaps.map('map', tileJSONUrl, {
+                scrollWheelZoom: true
+            }).setView([35.757448286487595, 51.40876293182373], 15);
+
+    </script>*@
+
+<script>
+        $(document).ready(function () {
+
+
+        @*var isYard = null;
+            if (@Model.id!= 0) {
+
+                    $('#isYard').prop('checked', @Model.isYard.ToString().ToLower());
+        }
+        $("#isYard").click(function () {
+            if ($(this).is(':checked'))
+                $("#isYard").val(true);
+            else
+                $("#isYard").val(false);
+        });*@
+        $('#cityId').on('change', function () {
+            var optionSelected = $("option:selected", this);
+            var valueSelected = this.value;
+            $('#provinceId').load('@Url.Action("loadProvince")?cityId=' + valueSelected);
+        });
+        $('#categoryId').on('change', function () {
+            var optionSelected = $("option:selected", this);
+            var valueSelected = this.value;
+            $('#subCategoryId').load('@Url.Action("loadsubCategory")?categoryId=' + valueSelected);
+});
+        });
+</script>
+@*<script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC89c4VeJzl1cf4ujaEC9ptpzyzuIiiQ3U&callback=initMap">
+    </script>*@
+@*<script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSpRcfBToBXnMgIbKDIHMqU0lpP0YcluI&callback=initMap">
+    </script>*@
+
+<script>
+    $(document).on('submit', '#addmelkForm', function (evt) {
+        evt.preventDefault();
+        $('#addmelkForm').removeData("validator");
+        $('#addmelkForm').removeData('unobtrusiveValidation');
+        $.validator.unobtrusive.parse('#addmelkForm');
+        var Tavafoghi = null;
+        if ($('#Tavafoghi-container  input[type="checkbox"]').is(':checked'))
+            $("#Tavafoghi").val(true);
+        else
+            $("#Tavafoghi").val(false);
+        var Ghabeletabdil = null;
+        if ($('#Ghabeletabdil-container  input[type="checkbox"]').is(':checked'))
+            $("#Ghabeletabdil").val(true);
+        else
+            $("#Ghabeletabdil").val(false);
+        while (price.value.indexOf(',') != -1) {
+            price.value = price.value.replace(',', '');
+        }
+        if ($('#priceRahn').length != 0) {
+            while (priceRahn.value.indexOf(',') != -1) {
+                priceRahn.value = priceRahn.value.replace(',', '');
+            }
+		}
+             if ($('#Pricepersquaremeter').length != 0) {
+                    while (Pricepersquaremeter.value.indexOf(',') != -1) {
+                        Pricepersquaremeter.value = Pricepersquaremeter.value.replace(',', '');
+                    }
+                }
+                 if ($('#Isswimmingpool-container  input[type="checkbox"]').is(':checked'))
+                    $("#Isswimmingpool").val(true);
+                else
+					$("#Isswimmingpool").val(false);
+                if ($('#IsParking-container  input[type="checkbox"]').is(':checked'))
+                    $("#IsParking").val(true);
+                else
+					$("#IsParking").val(false);
+
+                   if ($('#IsParking-container  input[type="checkbox"]').is(':checked'))
+                    $("#IsParking").val(true);
+                else
+					$("#IsParking").val(false);
+                    if ($('#IsElevator-container  input[type="checkbox"]').is(':checked'))
+                    $("#IsElevator").val(true);
+                else
+					$("#IsElevator").val(false);
+                    if ($('#IsJacuzzi-container  input[type="checkbox"]').is(':checked'))
+                    $("#IsJacuzzi").val(true);
+                else
+					$("#IsJacuzzi").val(false);
+        var form = new FormData($(this)[0]);
+        $.ajax({
+            url: "/Admin/Addmelk",
+            method: "POST",
+            data: form,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data == "ErrorTitle") {
+                    swal({
+                        title: '!هشدار',
+                        text: 'عنوان متن آگهی وارد شده تکراری است',
+                        type: 'warning',
+                        buttonsStyling: false,
+                        confirmButtonClass: 'btn btn-sm btn-light',
+                        background: 'rgba(0, 0, 0, 0.96)'
+                    })
+                }
+                else {
+                    //$("#content").html(data);
+                    //$('html,body').animate({
+                    //    scrollTop: $("#content").offset().top
+					//}, 'slow');
+					
+                     var url = '@Url.Action("AddAditionalmelk", "Admin", new { id = "__id__" })';
+                     window.location.href = url.replace('__id__', data);
+
+                }
+            },
+            error: function () {
+                alert("Ajax call failed");
+            }
+        })
+    });
+
+</script>
+
+
+<script>
+                //function initMap() {
+                //    var myLatLng = { lat:32.3331, lng:64.3212};
+                //    var map = new google.maps.Map(document.getElementById('googleMap'), {
+                //        zoom: 15,
+                //        center: myLatLng
+                //    });
+                //}
+                    //function initialize() {
+                    //    var mapProp = {
+                    //        center: new google.maps.LatLng(51.508742, -0.120850),
+                    //        zoom: 5,
+                    //        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    //    };
+                    //    var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                    //}
+                    //google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+@*<script>
+       google.maps.event.addListener(map, 'click', function (event) {
+           placeMarker(event.latLng);
+       });
+
+       function placeMarker(location) {
+           var marker = new google.maps.Marker({
+               position: location,
+               map: map
+           });
+       }
+    </script>*@
+
+

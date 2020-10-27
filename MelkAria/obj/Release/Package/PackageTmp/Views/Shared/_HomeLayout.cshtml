@@ -1,0 +1,433 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="keywords" content="مشاور اجلاس،املاک اجلاس،املاک اصفهان" />
+    <meta name="description" content="املاک اجلاس ، مشاور املاک اصفهان" />
+    <title>املاک اجلاس | مشاور املاک | املاک اصفهان | مشاور املاک اصفهان</title>
+    <link rel="shortcut icon" type="image/png" href="~/Content/IMG/25.jpg">
+ 
+    @*<link href="assets/css/main.css" rel="stylesheet">*@
+    @*<link href="~/Content/sina/bootstrap.min.css" rel="stylesheet" />*@
+    @*<script src="~/Scripts/sina/modernizr-2.8.3.js"></script>*@
+    <link href="~/Content/HomeVendors/css/main.css" rel="stylesheet" />
+
+    <link href="~/Content/HomeVendors/css/style.css" rel="stylesheet" />
+    <link href="~/Content/HomeVendors/css/prettyPhoto.css" rel="stylesheet" />
+
+    <!-- Color Style -->
+    @*<link class="alt" href="colors/color1.css" rel="stylesheet" type="text/css">
+        <link href="style-switcher/css/style-switcher.css" rel="stylesheet" type="text/css">*@
+    @*@Styles.Render("~/bundles/HomeCSS")*@
+    @*<link href="~/Content/HomeVendors/css/style-switcher.css" rel="stylesheet" />*@
+
+    <link href='https://api.cedarmaps.com/cedarmaps.js/v1.8.0/cedarmaps.css' rel='stylesheet' />
+
+
+    <link href="~/Content/HomeCSS/AllCss.css" rel="stylesheet" />
+    @*@Scripts.Render("~/bundles/HomeJS")*@
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    @RenderSection("csss", required: false)
+</head>
+<body>
+
+
+    <div class="modal fade modal-port" id="modal_register" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        ثبت نام
+                        <button class="close" aria-label="Close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/User/Store" method="post" class="form-horizontal">
+                        @*<div class="form-group">
+                                <label class="control-label mb-2" for="Email">ایمیل</label>
+                                <div class="input-group">
+                                    <input type="text" name="Email" class="form-control">
+
+                                </div>
+                            </div>*@
+                        @*<div class="form-group">
+                                <label class="control-label mb-2" for="UserNamee">نام کاربری</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="UserNamee" name="UserNamee" type="text">
+                                </div>
+                            </div>*@
+                        @*<div class="form-group">
+                                <label class="control-label mb-2" for="Password">رمز عبور</label>
+                                <div class="input-group">
+                                    <input type="password" name="Password" id="Password" class="form-control" dir="ltr">
+                                </div>
+                            </div>*@
+                        @*<div class="form-group">
+                                <label class="control-label mb-2" for="name">نام </label>
+                                <div class="input-group">
+                                    <input type="text" name="name" id="name" class="form-control">
+
+                                </div>
+                            </div>*@
+                        @*<div class="form-group">
+                                <label class="control-label mb-2" for="family">نام خانوادگی</label>
+                                <div class="input-group">
+                                    <input type="text" name="family" id="family" class="form-control">
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label mb-2" for="Phone">شماره تلفن</label>
+                                <div class="input-group">
+                                    <input type="text" name="Phone" id="Phone" class="form-control">
+
+                                </div>
+                            </div>*@
+                        <div class="form-group">
+                            <label class="control-label mb-2" for="Mobile">تلفن همراه</label>
+                            <div class="input-group">
+                                <input type="text" name="Mobile" id="Mobile" class="form-control">
+
+                            </div>
+                        </div>
+                        @*<div class="form-group d-flex justify-content-between mb-3">
+                                <div class="form-check w-100 d-flex justify-content-between align-items-center">
+                                    <input class="form-check-input ml-0" id="defaultCheck2" type="checkbox" value="" checked="">
+                                    <label class="form-check-label" for="defaultCheck2">مرا به خاطر بسپار</label>
+                                </div>
+                            </div>*@
+                        <p>
+                            <button class="btn btn_custom w-100" type="submit">ثبت نام</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-port" id="modal_login" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        ورود
+                        <button class="close" aria-label="Close" data-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" action="/User/SignIn" method="post">
+                        <div class="form-group">
+                            <label class="control-label mb-2" for="UserNamee">موبایل</label>
+                            <div class="input-group">
+                                <input class="form-control" id="UserNamee" name="UserNamee" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mb-2" for="Password">رمز عبور</label>
+                            <div class="input-group">
+                                <input class="form-control" id="Password" name="Password" type="text" dir="ltr" placeholder="Password">
+                            </div>
+                        </div>
+                        @*<div class="form-group d-flex justify-content-between mb-3">
+                                <div class="form-check w-100 d-flex justify-content-between align-items-center">
+                                    <input class="form-check-input ml-0" id="defaultCheck2" type="checkbox" value="" checked="">
+                                    <label class="form-check-label" for="defaultCheck2">مرا به خاطر بسپار</label><a href="#">فراموشی گذرواژه</a>
+                                </div>
+                            </div>*@
+                        <p>
+                            <button class="btn btn_custom w-100" type="submit">ورود</button>
+                        </p>
+                        <p><a class="btn__reg" href="#" data-toggle="modal" data-dismiss="modal" data-target="#modal_register">حساب کاربری ندارید؟ ثبت نام کنید.</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header class="navbar navbar-index" id="header">
+        <section id="menu_header">
+            <div class="stable">
+                <div class="container">
+                    <div class="d-flex flex-nowrap align-items-center">
+                        <div class="dropdown search" id="SerachFormSection" @*style="display:none"*@>
+                            @*<a class="nav-link" id="navbarDropdownMenuLink" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-icon="search"></a>*@
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <div class="form-group">
+
+                                    @*<input class="form-control flex-grow-1 h-auto" placeholder="محصول مورد نظر را جستجو کنید" type="text">
+                    <span class="input-group-btn">
+                        <button class="btn btn_default" type="button" data-icon="search"></button>
+                    </span>*@
+                                    <form class="form_filter" onsubmit="return Search(event)" id="FormSearch1">
+                                        <div class="form-group col-md-6">
+                                            <label for="address">محدوده جغرافیایی</label><i class="material-icons">add_location</i>
+                                            <input class="form-control" id="address" name="address" type="text" aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="fromPrice">از قیمت</label><i class="material-icons">credit_card</i>
+                                            <input class="form-control" id="fromPrice" name="fromPrice" type="text" aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="toPrice">تا قیمت</label><i class="material-icons">credit_card</i>
+                                            <input class="form-control" id="toPrice" name="toPrice" type="text" aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="toPrice">کد ملک</label><i class="material-icons">credit_card</i>
+                                            <input class="form-control" id="code" name="code" type="text" aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="RoomCount">تعداد اتاق خواب</label><i class="material-icons">domain</i>
+                                            <select class="custom-select" id="RoomCount" name="RoomCount">
+                                                <option value=""> انتخاب کنید </option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-5">
+                                            <label for="kind">نوع ملک</label><i class="material-icons">domain</i>
+                                            <select class="custom-select" id="kind" name="kind">
+                                                <option value=""> انتخاب کنید </option>
+                                                @foreach (var item in Enum.GetValues(typeof(MelkAria.Models.EnumMelkKind)))
+                                                {
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Edari))
+                                                    {
+                                                        <option value="2"> اداری </option>
+                                                    }
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Maskooni))
+                                                    {
+                                                        <option value="3"> مسکونی </option>
+                                                    }
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Tejari))
+                                                    {
+                                                        <option value="1"> تجاری </option>
+                                                    }
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Apartment))
+                                                    {
+                                                        <option value="4"> آپارتمان </option>
+                                                    }
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Zamin))
+                                                    {
+                                                        <option value="5"> زمین </option>
+                                                    }
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Sanati))
+                                                    {
+                                                        <option value="6"> صنعتی </option>
+                                                    }
+                                                    if (item.Equals(MelkAria.Models.EnumMelkKind.Keshavarzi))
+                                                    {
+                                                        <option value="7"> کشاورزی </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn_default mt-auto" @*onclick="Search()"*@>جستجو</button>
+                                        </div>
+                                    </form>                                                                                                 <div class="drop_searched">
+                                        <h6 class="mb-3">بیشترین جستجوهای اخیر:</h6>
+                                        @*<ul class="list_searched">
+                            <li><a href="#">عنوان متن توضیحات</a></li>
+                            <li><a href="#">عنوان متن </a></li>
+                            <li><a href="#">عنوان متن </a></li>
+                        </ul>*@
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="logo">
+                            <div class="navbar-brand">
+                                <h4 class="mb-0">
+                                    <img class="logo-img" src="~/Content/IMG/25.jpg"  style="height:50px;width:70px"/>
+                                </h4>
+                                <p class="text text-warning" style="margin-top:10px">@TempData["sessionExpired"]</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-fill fortmenu" id="menu">
+                            <input type="checkbox" id="menu-input">
+                            <label class="navbar-toggler d-lg-none" for="menu-input">&#9776;</label>
+                            <nav class="d-inherit navbar-toggleable-lg" id="navbar-header">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item active"><a class="nav-link" href="/Home/Index">صفحه نخست</a></li>
+
+                                    <li class="nav-item"><a class="nav-link" href="/Home/About">درباره ما</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Home/Contact"> تماس با ما</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Home/RegisterMelk?israhn=true">ایجاد آگهی رهن و اجاره</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="/Home/RegisterMelk?israhn=false">ایجاد آگهی خرید و فروش</a></li>
+
+                                </ul>
+                            </nav>
+                        </div>
+                        <div>
+                            <ul class="list-inline">
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="btn" href="#" data-icon-m="lock_open" data-toggle="modal" data-target="#modal_login">ورود</a></li>
+                                    <li><a class="btn" href="#" data-icon-m="person_outline" data-toggle="modal" data-target="#modal_register">ثبت نام</a></li>
+                                }
+                                else
+                                {
+                                    var db = new MelkAria.DAL.DataBaseContext();
+                                    var Member = db.Users.Where(p => p.userNamee == User.Identity.Name).Select(p => new
+                                    {
+                                        p.name,
+                                        p.mobile,
+                                        p.family,
+
+                                    }).FirstOrDefault();
+                                    var MemberName = Member.name;
+                                    var MemberFamily = Member.family;
+
+                                    <li><a class="link" href="/User/Profile">پروفایل @*@MemberName &nbsp; @MemberFamily*@</a></li>
+                                    <form id="signoutForm" action="/User/SignOut" method="post">
+
+                                        <ul style="display:inline;text-decoration:none;float:left">
+
+
+                                            <li style="display:inline">
+                                                <a onclick="signoutForm.submit()" class="link" style="cursor:pointer">
+                                                    <i class="fa fa-sign-in" style="margin-left:10px">
+
+                                                    </i>
+                                                    خروج
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </form>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </header>
+    @RenderBody()
+    <footer id="footer">
+        <section id="cards_footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <article class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">تماس با ما</h4>
+                            </div>
+                            <address class="card-body card-address">
+                                <ul class="item-flex">
+                                    <li data-icon="place"><span><strong>نشانی  : </strong>آدرس اینجا قرار میگیرد</span></li>
+                                    <li data-icon="alternate_email"><span><strong>نشانی رایانامه :</strong></span><a class="mail" href="mailto:ejlasamlak@gmail.com">ejlasamlak@gmail.com</a></li> 
+                                    <li data-icon="phone_forwarded"><span><strong>شماره همراه :</strong></span><a class="tell__footer" dir="ltr">09134351756-09134351758-09134351759-09132301004 </a></li>
+                                    @*<li data-icon="print"><span><strong>شماره نمابر :</strong></span><b dir="ltr">021 - 1234567</b></li>*@
+                                </ul>
+                            </address>
+                        </article>
+                    </div>
+                    <div class="col-md-4 mt-4 mt-md-0">
+                        <article class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">لینک های مفید</h4>
+                            </div>
+                            <div class="card-body">
+                                <nav class="item-link before_arrow">
+                                    <a href="/Home/Contact">تماس با ما</a>
+                                    
+                                    <a href="/Home/About">درباره ما</a>
+                                    
+                                </nav>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-md-4 mt-4 mt-md-0">
+                        <article class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">درباره ما</h4>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-justify">
+                                    ما املاک فروشی را سریع به فروش میرسانیم
+                                    واملاک اجاره ای راسریع تر به مستأجر خوب
+                                    اجاره میدهیم.
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <nav class="icons-social">
+                                    @*<a class="facebook" href="#"><i class="icon-facebook"></i></a>
+        <a class="twitter" href="#"><i class="icon-twitter"></i></a>*@
+                                    @*<a class="telegram" href="https://t.me/ariiyaaa/"><i class="icon-telegram"></i></a>*@
+                                    <a class="instagram" href="https://www.instagram.com/amlake.ejlas/"><i class="icon-instagram"></i></a>
+                                    <a class="telegram" href="mailto:ejlasamlak@gmail.com"><i class="fa fa-envelope"></i></a>
+                                    @*<a class="whatsapp" href="#"><i class="icon-whatsapp"></i></a>
+        <a class="youtube" href="#"><i class="icon-youtube"></i></a>
+        <a class="linkedin" href="#"><i class="icon-linkedin"></i></a>*@
+                                </nav>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="copyright">
+            <div class="container">
+                <p class="text-center"><a class="name-co" href="https://atrincom.com/" target="_blank">طراحی و توسعه آترین فناوران              </a></p>
+            </div>
+        </section>
+    </footer>
+    <script src='https://api.cedarmaps.com/cedarmaps.js/v1.8.0/cedarmaps.js'></script>
+
+    <script src="~/Scripts/sina/jquery-3.3.1.min.js"></script>
+    <script src="~/Content/HomeVendors/js/bootstrap.js"></script>
+    @*<script src="~/Scripts/sina/bootstrap.min.js"></script>*@
+    <script src="~/Scripts/sina/jquery.validate.min.js"></script>
+    <script src="~/Scripts/sina/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script src="~/Content/HomeVendors/js/main.js"></script>
+    <script src="~/Content/HomeVendors/js/swiper.js"></script>
+    <script src="~/Content/HomeVendors/js/scripts.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    @*<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+        <script src="~/Scripts/jquery.validate.js"></script>
+
+        <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+
+    @*<script src="~/Scripts/jquery.validate.min.js"></script>
+
+        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>*@
+
+    @RenderSection("scripts", required: false)
+    <script>
+
+        function Search(event) {
+           
+            event.preventDefault();
+            $.ajax({
+                url: "/Home/LoadMelksData",
+                method: "GET",
+                data: $("#FormSearch1").serialize(),
+                success: function (data) {
+                    $("#container").html('');
+                    $("#container").html(data);
+                    $("#navbarDropdownMenuLink").click();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

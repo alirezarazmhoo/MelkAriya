@@ -1,0 +1,75 @@
+﻿@model MelkAria.ViewModels.User.ChangePassViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content__inner content__inner--sm">
+    <header class="content__title">
+        <h1>تغییر رمز عبور</h1>
+    </header>
+
+    <div class="card new-contact" id="Change-Pass">
+        <div style="color:red;font-weight:bold;font-size:18px;text-align:center;padding-top:20px">
+            @TempData["Error"]
+        </div>
+        <div style="color:green;font-weight:bold;font-size:18px;text-align:center;padding-top:20px">
+            @TempData["success"]
+        </div>
+        
+        <form action="~/Admin/UpdatePass" method="post" enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Pass)
+                            @Html.PasswordFor(m => m.Pass, new { placeholder = "رمز عبور فعلی ", @class = "form-control", autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.Pass, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewPass)
+                            @Html.PasswordFor(m => m.NewPass, new { placeholder = "رمز عبور جدید ", @class = "form-control", autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.NewPass, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ConfirmNewPass)
+                            @Html.PasswordFor(m => m.ConfirmNewPass, new { placeholder = "تکرار رمز عبور جدید ", @class = "form-control", autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.ConfirmNewPass, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                    <div class="mt-5 text-center">
+                        <button type="submit" class="btn btn-primary">ثبت</button>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts
+{
+   
+<script>
+    $('#Change-Pass').find('input,textarea,select').each(function (key) {
+        if ($(this).attr('id') == "ID") {
+            $(this).val(0);
+        }
+        else
+            if ($(this).attr('name') != '__RequestVerificationToken')
+                $(this).val('');
+    })
+           </script>
+
+
+}

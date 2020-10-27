@@ -1,0 +1,212 @@
+﻿@model MelkAria.ViewModels.User.LoginUserViewModel
+
+@{
+    Layout = null;
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="google" content="notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="~/Content/vendors/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet" />
+    <link href="~/Content/vendors/animate.css/animate.min.css" rel="stylesheet" />
+    <link href="~/Content/CSS/app.min.css" rel="stylesheet" />
+    <link href="~/Content/CSS/MyStyle.css" rel="stylesheet" />
+    <link href="~/Content/vendors/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+</head>
+
+<body data-sa-theme="1">
+
+    <div class="login">
+
+        <!-- Login -->
+        <div class="login__block active" id="l-login">
+            <div class="login__block__header">
+                <i class="zmdi zmdi-account-circle"></i>
+                ! ثبت نام
+                <a class="dropdown-item" href="/User/Login">ورود</a>
+
+                @*<a class="dropdown-item" data-sa-action="login-switch" data-sa-target="#l-register" href="default.htm">ثبت نام</a>*@
+                @*<a class="dropdown-item" data-sa-action="login-switch" data-sa-target="#l-forget-password" href="default.htm">فراموشی رمز عبور؟</a>*@
+
+            </div>
+
+            <div class="login__block__body">
+                <div style="color:red;text-align:right">
+                    @Html.ValidationSummary()
+                </div>
+                
+                    
+                        <form action="~/User/Store" method="post">
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                @*<input type="text" class="form-control text-center" placeholder="کد ملی معرف">*@
+                                @*@Html.TextBoxFor(m => m.ParentCodeMeli, new { placeholder = "کد ملی معرف", @class = "form-control text-center" })
+                                @Html.ValidationMessageFor(m => m.ParentCodeMeli, "", new { @class = "validationMessage" })*@
+                            </div>
+                            <div class="form-group form-group--centered">
+                                @*@Html.TextBoxFor(m => m.CodeMeli, new { placeholder = "کد ملی", @class = "form-control text-center" })
+                                @Html.ValidationMessageFor(m => m.CodeMeli, "", new { @class = "validationMessage" })*@
+                            </div>
+                            <div class="form-group form-group--centered">
+                                @Html.TextBoxFor(m => m.Mobile, new { placeholder = "تلفن همراه", @class = "form-control text-center" })
+                                @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "validationMessage" })
+                            </div>
+
+                            <div class="form-group">
+                                <img alt="Captcha" src="@Url.Action("CaptchaImage")" style="" />
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Captcha, new { placeholder = "جواب جمع", @class = "form-control text-center" })
+                                @Html.ValidationMessageFor(model => model.Captcha)
+                            </div>
+                            <button type="submit" class="btn btn--icon login__block__btn">
+                                <i class="zmdi zmdi-plus"></i>
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        
+    <script src="~/Content/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="~/Content/vendors/popper.js/dist/umd/popper.min.js"></script>
+    <script src="~/Content/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/Content/JS/app.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Content/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script>
+        $("#Captcha").val("");
+    </script>
+    @if (ViewBag.Message == "DublicateMobile")
+    {
+
+        <script>
+
+            swal({
+                title: '!هشدار',
+                text: 'تلفن همراه وارد شده تکراری است',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+            
+        </script>
+    }
+   else if (ViewBag.Message == "DublicateCodeMeli")
+    {
+
+        <script>
+
+            swal({
+                title: '!هشدار',
+                text: 'کد ملی وارد شده تکراری است',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+
+        </script>
+    }
+    
+    else if (ViewBag.Message == "NotFoundParent")
+    {
+        <script>
+
+            swal({
+                title: '!هشدار',
+                text: 'کد معرف وارد شده معتبر نیست',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+           
+        </script>
+    }
+
+    else if (ViewBag.Message == "RegisteredAndSendSMS")
+    {
+        <script>
+
+            swal({
+                title: '!ثبت نام',
+                text: 'کد ملی شما با موفقیت ثبت گردید نام کاربری و رمز عبور برای شما ارسال خواهد شد',
+                type: 'success',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+
+        </script>
+    }
+    else if (ViewBag.Message == "RegisteredAndNotSendSMS")
+    {
+        <script>
+
+            swal({
+                title: '!ثبت نام',
+                text: 'کد ملی شما با موفقیت ثبت گردید اما متاسفانه ارسال پیامک با مشکل مواجه شده است',
+                type: 'success',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+
+        </script>
+    }
+    else if (ViewBag.Message == "usersChildExced")
+    {
+        <script>
+
+            swal({
+                title: '!هشدار',
+                text: 'هر شخص حداکثر 4 زیر مجموعه می تواند داشته باشد',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+
+        </script>
+    }
+    else if (ViewBag.Message == "IncorrectInput")
+    {
+        <script>
+
+            swal({
+                title: '!هشدار',
+                text: 'ورودی ها مجاز نیست',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+            
+        </script>
+    }
+    else if (ViewBag.Message == "usersDotAcceptChild")
+    {
+        <script>
+
+            swal({
+                title: '!هشدار',
+                text: 'معرف قادر به اضافه کردن کاربر جدید نمی باشد',
+                type: 'warning',
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-sm btn-light',
+                background: 'rgba(0, 0, 0, 0.96)'
+            })
+           
+        </script>
+    }
+
+</body>
+</html>

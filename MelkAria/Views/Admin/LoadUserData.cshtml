@@ -1,0 +1,86 @@
+﻿@model MelkAria.ViewModels.User.LoadUserDataViewModel
+@using MelkAria.DAL;
+
+@{
+    int npage = Model.TotalNumber;
+    int i = 1;
+}
+<nav>
+    <ul class="pagination">
+        @{
+
+            @*<li class="page-item pagination-first"><a class="page-link" href="#"></a></li>*@
+            @*<li class="page-item pagination-prev"><a class="page-link" href="#"></a></li>*@
+        while (npage > 0)
+        {
+            if (i == 1)
+            {
+                <li class="page-item active"><a class="page-link" onclick="ChangePage(@i,this)">@i</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" onclick="ChangePage(@i,this)">@i</a></li>
+
+            }
+            i++;
+            npage -= 10;
+        }
+
+
+        @*<li class="page-item pagination-next"><a class="page-link" onclick="AddPage(@i,this)"></a></li>*@
+            @*<li class="page-item pagination-last"><a class="page-link" href="#"></a></li>*@
+        }
+    </ul>
+</nav>
+
+<table class="table mb-3">
+    <thead class="thead-default">
+        <tr>
+            
+            <th>نام</th>
+            <th>نام خانوادگی</th>
+            <th>شماره همراه</th>
+            <th>نام کاربری</th>
+            <th>رمز عبور</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Users)
+        {
+             <tr >
+                 
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.family)
+                </td>
+               
+               <td>
+                    @Html.DisplayFor(modelItem => item.mobile)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.userNamee)
+                </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.passwordShow)
+                 </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function ChangePage(PageNumber, e) {
+                    //$(e).parent().parent().find('.page-item').removeClass('active');
+                    //$(e).parent().addClass('active');
+                  var UserId = $("#SearchUser #UserSearch").val();
+                    $("#UserBody").html('');
+                    //$(".page-loader").show();
+                    $("#UserBody").load('@Url.Action("LoadUserData")?page=' + PageNumber + '&UserId=' + UserId, function () {
+                        $("#UserBody").find('.pagination').find('.page-item').removeClass('active');
+                        $("#UserBody").find('.pagination').find('li:nth-child(' + PageNumber + ')').addClass('active');
+                    });
+                }
+</script>

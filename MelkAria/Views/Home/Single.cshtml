@@ -1,0 +1,270 @@
+﻿@model MelkAria.ViewModels.Home.HomeSingleViewModel
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<section id="sectionHome">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-single">
+                        <li class="breadcrumb-item"><a href="/Home/Index">صفحه نخست</a></li>
+                        <li class="breadcrumb-item"><a href="#">املاک</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">خرید</li>
+                    </ol>
+                </nav>
+                <div class="swiper_container gallery-top">
+                    <div class="swiper-wrapper swipper-one">
+                        <div class="swiper-slide"><img src="@Model.melk.imageUrl" alt="@Model.melk.title"></div>
+
+                        @foreach (var item in Model.photos)
+                        {
+                            <div class="swiper-slide"><img src="@item.file" alt="@Model.melk.title"></div>
+                        }
+
+
+                    </div>
+                    <div class="swiper-button-next swiper-button-white"></div>
+                    <div class="swiper-button-prev swiper-button-white"></div>
+                </div>
+                <div class="swiper_container gallery-thumbs mt-3">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide"><img src="@Model.melk.imageUrl" alt="@Model.melk.title"></div>
+                        @foreach (var item in Model.photos)
+                        {
+                            <div class="swiper-slide"><img src="@item.file" alt="@Model.melk.title"></div>
+                        }
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-4 mb-3">
+                    <h4>@Model.melk.title</h4>
+                    <p class="card-text">املاک آریا:09139200042</p>
+                    @if (Model.melk.Ghabeletabdil == true)
+                    {
+                    <span class="card_price">
+                        قابل تبدیل
+                    </span>
+                    }
+                    @if (Model.melk.IsRahn)
+                    {
+                        if (Model.melk.Tavafoghi == true)
+                        {
+                            <span class="card_price">
+                                توافقی
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="card_price">
+                                @String.Format("{0:0,0}", @Model.melk.price)قیمت اجاره به تومان
+                            </span>
+                            <span class="card_price">
+                                @String.Format("{0:0,0}", @Model.melk.priceRahn)قیمت رهن به تومان
+                            </span>
+                        }
+
+                    }
+                    else
+                    {
+                        if (Model.melk.Tavafoghi == true)
+                        {
+                            <span class="card_price">
+                                توافقی
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="card_price">
+                                @String.Format("{0:0,0}", @Model.melk.price)
+                            </span>
+                        }
+
+                    }
+                </div>
+                <div class="card card_infohome flex-none">
+                    <div class="card-header">
+                        <ul class="list_home d-flex justify-content-between">
+                            <li data-icon-m="add_location">@Model.melk.address</li>
+                            <li data-icon-m="meeting_room">@Model.melk.roomCount خوابه</li>
+                            <li data-icon-m="domain">@Model.melk.metraj متر</li>
+                        </ul>
+                    </div>
+                    <div class="card-body text-justify p-4">@Model.melk.description</div>
+                    <div class="card-body text-justify p-4">@Model.melk.ensheabat</div>
+
+                </div>
+                <div class="card card_infohome flex-none mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title">اطلاعات تکمیلی</h5>
+                    </div>
+                    <div class="card-body text-justify p-4">
+                        <ul class="list_information">
+                            <li><b style="font-weight: bold;">کد ملک :</b> <b>@Model.melk.code</b></li>
+                            <li> <strong>سال ساخت :</strong> <b>@Model.melk.yearProduce</b></li>
+                            @if(Model.melk.IsRahn ==false)
+							{
+
+                            <li> <strong>قیمت هر متر :</strong> <b>@Model.melk.Pricepersquaremeter</b></li>
+							}
+                            <li> <strong>وسایل گرمایشی :</strong> <b>@Model.melk.heatingKind</b></li>
+                            <li> <strong>وسایل سرمایشی :</strong> <b>@Model.melk.CoolKind</b></li>
+                            <li> <b style="font-weight: bold;">سقف :</b> <b>@Model.melk.cellingKind</b></li>
+                            <li> <strong>نوع پارکینگ :</strong> <b>@Model.melk.parkingKind</b></li>
+                            <li> <b style="font-weight: bold;">کف :</b> <b>@Model.melk.floorKind</b></li>
+                            <li> <strong>تعداد طبقه :</strong> <b>@Model.melk.floorCount</b></li>
+                            @if (!String.IsNullOrWhiteSpace(Model.melk.sanad.ToString()))
+                            {
+                                string sanadKind = "";
+                                switch (Model.melk.sanad)
+                                {
+                                    case MelkAria.Models.EnumSanad.Aady:
+                                        sanadKind = "عادی";
+                                        break;
+                                    case MelkAria.Models.EnumSanad.Mosha:
+                                        sanadKind = "مشاع";
+                                        break;
+                                    case MelkAria.Models.EnumSanad.ShishDong:
+                                        sanadKind = "شش دانگ";
+                                        break;
+                                }
+                                <li><b style="font-weight: bold;">نوع سند :</b> <b>@sanadKind</b></li>
+                            }
+                            <li><strong>نوع اسکلت :</strong> <b>@Model.melk.Skeletontype</b></li>
+
+                            @{
+                                if (Model.melk.IsElevator)
+                                {
+
+                                    <li> <strong>دارای آسانسور  : </strong> <b>هست </b></li>
+                                }
+                                else
+                                {
+                                    <li> <strong> دارای آسانسور  : </strong> <b>نیست </b></li>
+
+                                }
+                            }
+                            @{
+                                if (Model.melk.IsParking)
+                                {
+
+                                    <li> <strong> دارای پارکینگ : </strong> <b>هست </b></li>
+                                }
+                                else
+                                {
+                                    <li> <strong> دارای پارکینگ : </strong> <b>نیست </b></li>
+
+                                }
+                            }
+                            @{
+                                if (Model.melk.Isswimmingpool)
+                                {
+
+                                    <li> <strong> دارای استخر : </strong> <b>هست </b></li>
+                                }
+                                else
+                                {
+                                    <li> <strong> دارای استخر : </strong> <b>نیست </b></li>
+
+                                }
+                            }
+                            @{
+                                if (Model.melk.IsJacuzzi)
+                                {
+
+                                    <li> <strong> دارای جکوزی : </strong> <b>هست </b></li>
+                                }
+                                else
+                                {
+                                    <li> <strong> دارای جکوزی : </strong> <b>نیست </b></li>
+
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                @*<div class="card card_name">
+                        <div class="card-header">
+                            <span class="avatar">
+                                <img src="assets/images/8cb4a8d7.png" alt="">
+                                <div>
+                                    <h5>جلال خالقی </h5><b>۰۹۳۹۰۱۵۷۷۱۹</b>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <input class="form-control" id="exampleInputEmail1" type="text" aria-describedby="emailHelp" placeholder="نام و نام خانوادگی">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id="exampleInputPassword1" type="password" placeholder="نشانی رایانامه">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="متن پیام"></textarea>
+                                </div>
+                                <button class="btn btn_default w-100 mt-3" type="submit">تماس</button>
+                            </form>
+                        </div>
+                    </div>*@
+                @foreach (var item in Model.Lastmelks)
+                {
+                    <figure class="card card_category flex-none">
+                        <a class="card-image" href="/Home/Single?name=@item.title.Replace(' ', '-')"><img src="@item.imageUrl" alt=""></a>
+                        <figcaption class="card-body">
+                            <a class="fs-20 card-title" href="/Home/Single?name=@item.title.Replace(' ', '-')">@item.address</a>
+                            <p class="card-text">املاک آریا:09139200042</p>
+                            <p class="card-text">@item.description</p>
+                            @if (item.IsRahn)
+                            {
+                                if (item.Tavafoghi == true)
+                                {
+                                    <span class="card_price">
+                                        توافقی
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="card_price">
+                                        @String.Format("{0:0,0}", @item.price)قیمت اجاره به تومان
+                                    </span>
+                                    <span class="card_price">
+                                        @String.Format("{0:0,0}", @item.priceRahn)قیمت رهن به تومان
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                if (item.Tavafoghi == true)
+                                {
+                                    <span class="card_price">
+                                        توافقی
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="card_price">
+                                        @String.Format("{0:0,0}", @item.price)
+                                    </span>
+                                }
+                            }
+                            <hr class="card_line">
+                            <ul class="list_info">
+                                <li> <span>طبقه</span><i>@item.floorCount</i></li>
+                                <li><span>متراژ</span><i>@item.metraj</i></li>
+                                <li><span>اتاق</span><i>@item.roomCount</i></li>
+                            </ul>
+                        </figcaption>
+                    </figure>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</section>
+

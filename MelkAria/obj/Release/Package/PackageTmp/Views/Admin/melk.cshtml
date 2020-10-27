@@ -1,0 +1,214 @@
+﻿@model MelkAria.ViewModels.melk.melkViewModel
+@{
+    ViewBag.Title = "melk";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">ملک</h4>
+        <button style="margin-bottom:20px;" class="btn btn-primary" onclick="window.location.href='@Url.Action("newmelk", "Admin")'">ایجاد آگهی خرید و فروش</button>
+        <a style="margin-bottom:20px;" class="btn btn-primary" href="../Admin/newmelk?israhn=true">ایجاد آگهی رهن و اجاره</a>
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جستجو</h4>
+                    <div class="row" id="Searchcar">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>عنوان متن آگهی</label>
+                                <input type="text" class="form-control" id="titleSearch" name="titleSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>تلفن</label>
+                                <input type="text" class="form-control" id="tellSearch" name="tellSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>کد ملک</label>
+                                <input type="text" class="form-control" id="codeSearch" name="codeSearch" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+
+                                <button class="btn btn-success" onclick="Searchmelk()"> جستجو</button>
+                                <button class="btn btn-info" onclick="ShowAllmelk()"> نمایش همه</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">ملک</h4>
+
+                <div id="melkBody" class="table-responsive">
+                    @Html.Action("LoadmelkData", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-car-confirm" tabindex="-1">
+    <div class="modal-dialog modal-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="car-header" class="modal-title pull-left">تایید </h5>
+            </div>
+            <div class="modal-body">
+                <form id="melkConfirm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="PageNumber" />
+                    @Html.TextBoxFor(m => m.id, new { type = "hidden", @class = "form-control" })
+
+
+                    <div class="form-group">
+                        <label>وضعیت</label>
+                        <select class="form-control" id="status" name="status">
+
+                            @foreach (var item in Enum.GetValues(typeof(MelkAria.Models.EnumStatus)))
+                            {
+
+                                if (item.Equals(MelkAria.Models.EnumStatus.Pending))
+                                {
+                                    <option selected value="1"> در انتظار تایید </option>
+                                }
+                                if (item.Equals(MelkAria.Models.EnumStatus.Accept))
+                                {
+                                    <option selected value="2"> تایید شده </option>
+                                }
+                                if (item.Equals(MelkAria.Models.EnumStatus.NotAccept))
+                                {
+                                    <option selected value="3"> تایید نشده </option>
+                                }
+                            }
+                        </select>
+
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group" id="confirmDescriptiondiv">
+                        @Html.LabelFor(m => m.confirmDescription)
+                        @Html.TextAreaFor(m => m.confirmDescription, new { placeholder = "دلیل رد ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.confirmDescription, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-link">ذخیره</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">بستن</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+    <script>
+                $("#melkConfirm").submit(function (event) {
+                    event.preventDefault();
+                    var id = $("#melkConfirm #id").val();
+                    var status = $("#melkConfirm #status").val();
+                    var confirmDescription = $("#melkConfirm #confirmDescription").val();
+
+                    
+                    var pagenumber = $("#PageNumber").val();
+                    var form = $(this).serialize();
+                    $.ajax({
+                        url: "/Admin/Acceptmelk?ID=" + id + "&status=" + status + "&confirmDescription="+confirmDescription,
+                        method: "POST",
+                        
+                        success: function (data) {
+                            $('#modal-car-confirm').modal('hide');
+                             var   messageText = 'ویرایش وضعیت ملک با موفقیت انجام شد';
+
+                                $("#carBody").load('@Url.Action("LoadmelkData")?page=' + pagenumber, function () {
+                                    $("#carBody").find('.pagination').find('.page-item').removeClass('active');
+                                    $("#carBody").find('.pagination').find('li:nth-child(' + pagenumber + ')').addClass('active');
+                                });
+                            swal({
+                                title: '!  موفقیت آمیز',
+                                text: messageText,
+                                type: 'success',
+                                buttonsStyling: false,
+                                confirmButtonClass: 'btn btn-sm btn-light',
+                                background: 'rgba(0, 0, 0, 0.96)'
+							})
+							location.reload();
+                        }
+
+                    })
+                });
+
+                $(function () {
+                    $('#melkConfirm #ConfirmDescriptiondiv').hide();
+                    $('#status').change(function () {
+                        if ($('#status').val() == '3') {
+                            $('#melkConfirm #confirmDescriptiondiv').show();
+                        } else {
+                            $('#melkConfirm #confirmDescriptiondiv').hide();
+                        }
+                    });
+                });
+
+    </script>
+    <script>
+        $('#modal-melk-add').on('hidden.bs.modal', function () {
+            $('#modal-melk-add').find('input,textarea,select').each(function (key) {
+                if ($(this).attr('id') == "id") {
+                    $(this).val(0);
+                }
+                else
+                    if ($(this).attr('name') != '__RequestVerificationToken')
+                        $(this).val('');
+            })
+        })
+
+
+    </script>
+
+    <script>
+                function Searchmelk() {
+                    $("#melkBody").html('');
+
+                    var tell = $("#tellSearch").val();
+                    var title = $("#titleSearch").val();
+					var code = $("#codeSearch").val();
+                    var userId = $("#Searchmelk #userIdSearch").val();
+                    $.ajax({
+                        url: "/Admin/LoadmelkData",
+                        method: "GET",
+                        data: {
+                            tell: tell,
+                            title: title,
+                            userId: userId,
+                            code: code,
+                        },
+                        success: function (data) {
+                            $("#melkBody").html(data);
+                        }
+                    });
+                }
+                function ShowAllmelk()
+                {
+                    $("#melkBody").html('');
+                    $('#Searchmelk').find('input,textarea,select').each(function () {
+                        $(this).val('');
+                    })
+                    $("#melkBody").load('@Url.Action("LoadmelkData")');
+                }
+    </script>
+
+}

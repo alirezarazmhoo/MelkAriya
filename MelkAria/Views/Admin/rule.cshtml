@@ -1,0 +1,184 @@
+﻿@model MelkAria.ViewModels.rule.ruleViewModel
+@{
+    ViewBag.Title = "rule";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">قوانین</h4>
+        <button style="margin-bottom:20px;" class="btn btn-primary" data-toggle="modal" data-target="#modal-rule-add">جدید</button>
+
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جستجو</h4>
+                    <div class="row" id="Searchrule">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>عنوان</label>
+                                <input type="text" class="form-control" id="titleSearch" name="titleSearch" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+
+                                <button class="btn btn-success" onclick="Searchrule()"> جستجو</button>
+                                <button class="btn btn-info" onclick="ShowAllrule()"> نمایش همه</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">قوانین</h4>
+
+                <div id="ruleBody" class="table-responsive">
+                    @Html.Action("LoadruleData", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-rule-add" tabindex="-1">
+    <div class="modal-dialog modal-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="rule-header" class="modal-title pull-left"> قوانین جدید</h5>
+            </div>
+            <div class="modal-body">
+                <form id="ruleAdd">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="PageNumber" />
+                    @Html.TextBoxFor(m => m.id, new { type = "hidden", @class = "form-control" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.title)
+                        @Html.TextBoxFor(m => m.title, new { placeholder = "عنوان متن آگهی ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.title, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.description)
+                        @Html.TextAreaFor(m => m.description, new { placeholder = "توضیحات", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.description, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-link">ذخیره</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">بستن</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+
+    <script>
+                $('#modal-rule-add').on('hidden.bs.modal', function () {
+                    $('#modal-rule-add').find('input,textarea,select').each(function (key) {
+                        if ($(this).attr('id') == "id") {
+                            $(this).val(0);
+                        }
+                        else
+                            if ($(this).attr('name') != '__RequestVerificationToken')
+                                $(this).val('');
+                    })
+                })
+                $("#ruleAdd").submit(function (event) {
+                    event.preventDefault();
+                    var pagenumber = $("#PageNumber").val();
+                    var form = $(this).serialize();
+
+                    $.ajax({
+                        url: "/Admin/Addrule",
+                        method: "POST",
+                        data: form,
+
+                        success: function (data) {
+                            $('#modal-rule-add').modal('hide');
+                            var messageText = "";
+                            if ($('#modal-rule-add #id').val() != '' && $('#modal-rule-add #id').val() != 0) {
+                                messageText = 'ویرایش  قوانین با موفقیت انجام شد';
+
+                                $("#ruleBody").load('@Url.Action("LoadruleData")?page=' + pagenumber, function () {
+                                    $("#ruleBody").find('.pagination').find('.page-item').removeClass('active');
+                                    $("#ruleBody").find('.pagination').find('li:nth-child(' + pagenumber + ')').addClass('active');
+                                });
+
+                            }
+                            else {
+                                messageText = 'اضافه کردن قوانین با موفقیت انجام شد';
+                                $('.pagination').find('.page-item').removeClass('active');
+                                $('.pagination').find('.page-item').first().addClass('active');
+                            $("#ruleBody").load('@Url.Action("LoadruleData")?page=' + 1);
+
+                            }
+
+                            swal({
+                                title: '!  موفقیت آمیز',
+                                text: messageText,
+                                type: 'success',
+                                buttonsStyling: false,
+                                confirmButtonClass: 'btn btn-sm btn-light',
+                                background: 'rgba(0, 0, 0, 0.96)'
+                            })
+
+                        },
+                        error: function () {
+                            alert("Ajax call failed");
+                        }
+                    })
+                });
+
+    </script>
+    <script>
+
+                //function AddPage(number,e)
+                //{
+                //    $(e).parent().parent().append("<li class='page-item'><a class='page-link' onclick='ChangePage(" + number + ")'>" + number+"</a></li>");
+                //}
+    </script>
+    <script>
+                function Searchrule() {
+                    $("#ruleBody").html('');
+                    var title = $("#Searchrule #titleSearch").val();
+                    $.ajax({
+                        url: "/Admin/LoadruleData",
+                        method: "GET",
+                        data: {
+                            title: title,
+                            
+                        },
+
+                        success: function (data) {
+                            $("#ruleBody").html(data);
+                        }
+                    });
+                }
+                function ShowAllrule()
+                {
+                    $("#ruleBody").html('');
+                    $('#Searchrule').find('input,textarea,select').each(function () {
+
+                        $(this).val('');
+                    })
+                    $("#ruleBody").load('@Url.Action("LoadruleData")');
+                }
+    </script>
+
+}

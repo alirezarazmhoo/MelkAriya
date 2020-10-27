@@ -1,0 +1,191 @@
+﻿@model MelkAria.ViewModels.city.cityViewModel
+@{
+    ViewBag.Title = "city";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">استان</h4>
+        <button style="margin-bottom:20px;" class="btn btn-primary" data-toggle="modal" data-target="#modal-city-add">جدید</button>
+
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جستجو</h4>
+                    <div class="row" id="Searchcity">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>نام استان</label>
+                                <input type="text" class="form-control" id="nameSearch" name="nameSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>نام لاتین استان</label>
+                                <input type="text" class="form-control" id="nameEnglishSearch" name="nameEnglishSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+
+                                <button class="btn btn-success" onclick="Searchcity()"> جستجو</button>
+                                <button class="btn btn-info" onclick="ShowAllcity()"> نمایش همه</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">استان</h4>
+
+                <div id="cityBody" class="table-responsive">
+                    @Html.Action("LoadcityData", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-city-add" tabindex="-1">
+    <div class="modal-dialog modal-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="city-header" class="modal-title pull-left"> استان جدید</h5>
+            </div>
+            <div class="modal-body">
+                <form id="cityAdd">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="PageNumber" />
+                    @Html.TextBoxFor(m => m.id, new { type = "hidden", @class = "form-control" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.name)
+                        @Html.TextBoxFor(m => m.name, new { placeholder = "نام ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.name, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.nameEnglish)
+                        @Html.TextBoxFor(m => m.nameEnglish, new { placeholder = "نام لاتین", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.nameEnglish, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-link">ذخیره</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">بستن</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+    
+    <script>
+                $('#modal-city-add').on('hidden.bs.modal', function () {
+                    $('#modal-city-add').find('input,textarea,select').each(function (key) {
+                        if ($(this).attr('id') == "id") {
+                            $(this).val(0);
+                        }
+                        else
+                            if ($(this).attr('name') != '__RequestVerificationToken')
+                                $(this).val('');
+                    })
+                })
+                $("#cityAdd").submit(function (event) {
+                    event.preventDefault();
+                    var pagenumber = $("#PageNumber").val();
+                    var form = $(this).serialize();
+                    
+                    $.ajax({
+                        url: "/Admin/Addcity",
+                        method: "POST",
+                        data: form,
+
+                        success: function (data) {
+                            $('#modal-city-add').modal('hide');
+                            var messageText = "";
+                            if ($('#modal-city-add #id').val() != '' && $('#modal-city-add #id').val() != 0) {
+                                messageText = 'ویرایش  استان با موفقیت انجام شد';
+
+                                $("#cityBody").load('@Url.Action("LoadcityData")?page=' + pagenumber, function () {
+                                    $("#cityBody").find('.pagination').find('.page-item').removeClass('active');
+                                    $("#cityBody").find('.pagination').find('li:nth-child(' + pagenumber + ')').addClass('active');
+                                });
+
+                            }
+                            else {
+                                messageText = 'اضافه کردن استان با موفقیت انجام شد';
+                                $('.pagination').find('.page-item').removeClass('active');
+                                $('.pagination').find('.page-item').first().addClass('active');
+                            $("#cityBody").load('@Url.Action("LoadcityData")?page=' + 1);
+
+                            }
+
+                            swal({
+                                title: '!  موفقیت آمیز',
+                                text: messageText,
+                                type: 'success',
+                                buttonsStyling: false,
+                                confirmButtonClass: 'btn btn-sm btn-light',
+                                background: 'rgba(0, 0, 0, 0.96)'
+                            })
+
+                        },
+                        error: function () {
+                            alert("Ajax call failed");
+                        }
+                    })
+                });
+
+    </script>
+    <script>
+
+                //function AddPage(number,e)
+                //{
+                //    $(e).parent().parent().append("<li class='page-item'><a class='page-link' onclick='ChangePage(" + number + ")'>" + number+"</a></li>");
+                //}
+    </script>
+    <script>
+                function Searchcity() {
+                    $("#cityBody").html('');
+                    var name = $("#Searchcity #nameSearch").val();
+                    var nameEnglish = $("#Searchcity #nameEnglishSearch").val();
+
+                    $.ajax({
+                        url: "/Admin/LoadcityData",
+                        method: "GET",
+                        data: {
+                            name: name,
+                            nameEnglish: nameEnglish,
+                        },
+
+                        success: function (data) {
+                            $("#cityBody").html(data);
+                        }
+                    });
+                }
+                function ShowAllcity()
+                {
+                    $("#cityBody").html('');
+                    $('#Searchcity').find('input,textarea,select').each(function () {
+
+                        $(this).val('');
+                    })
+                    $("#cityBody").load('@Url.Action("LoadcityData")');
+                }
+    </script>
+
+}

@@ -1,0 +1,116 @@
+﻿@model List<MelkAria.Models.melk>
+@{
+    var count = 1;
+}
+@foreach (var item in Model)
+{
+
+    var catStyle = (item.IsRahn == true) ? "catRahn" : "catFroosh";
+
+    <div class="mix @catStyle" data-order="1">
+        <figure class="card card_category">
+            <a class="card-image" href="/Home/Single?name=@item.title.Replace(' ', '-')">
+                @if (!string.IsNullOrEmpty(item.imageUrl))
+                {<img src="@item.imageUrl" alt="@item.title">
+                }
+                else
+                {
+                    if (count % 2 == 0)
+                    {
+                        <img src="/Content/IMG/zoj.jpg" alt="@item.title" />
+
+                    }
+                    else
+                    {
+                        <img src = "/Content/IMG/fard.jpg" alt="@item.title" />
+                    }
+                }
+            </a>
+            <figcaption class="card-body">
+                <a class="fs-20 card-title" href="/Home/Single?name=@item.title.Replace(' ', '-')">@item.title</a>
+                <p class="card-text">املاک اجلاس : 09134351758</p>
+                <p class="card-text">@item.description</p>
+                @if (item.IsRahn)
+                {
+                    if (item.Tavafoghi == true)
+                    {
+                        <span class="card_price">
+                            توافقی
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="card_price">
+                            @String.Format("{0:0,0}", item.priceRahn)<span style="font-size:1.2rem">قیمت رهن</span>
+                        </span>
+                        <span class="card_price">
+                            @String.Format("{0:0,0}", item.price)<span style="font-size:1.2rem">قیمت اجاره</span>
+                        </span>
+
+                    }
+                }
+                else
+                {
+                    if (item.Tavafoghi == true)
+                    {
+                        <span class="card_price">
+                            توافقی
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="card_price">
+                            @String.Format("{0:0,0}", item.price) تومان
+                        </span>
+                    }
+                }
+                <hr class="card_line">
+                <ul class="list_info">
+                    <li> <span>کد ملک</span><i>@item.code</i></li>
+
+                    <li> <span>طبقه</span><i>@item.floorCount</i></li>
+                    <li><span>متراژ</span><i>@item.metraj</i></li>
+                    <li><span>اتاق</span><i>@item.roomCount</i></li>
+                </ul>
+            </figcaption>
+        </figure>
+    </div>
+    count++;
+}
+@*@foreach (var item in Model.Where(x => x.statusKind == MelkAria.Models))
+    {
+        <div class="mix category-b" data-order="2">
+            <figure class="card card_category">
+                <a class="card-image" href="/Home/Single?name=@item.title.Replace(' ', '-')"><img src="@item.imageUrl" alt="@item.title"></a>
+                <figcaption class="card-body">
+                    <a class="fs-20 card-title" href="#">@item.title</a>
+                    <p class="card-text">@item.description</p><span class="card_price">@item.price تومان</span>
+                    <hr class="card_line">
+                    <ul class="list_info">
+                        <li> <span>طبقه</span><i>@item.floorCount</i></li>
+                        <li><span>متراژ</span><i>@item.metraj</i></li>
+                        <li><span>اتاق</span><i>@item.roomCount</i></li>
+                    </ul>
+                </figcaption>
+            </figure>
+        </div>
+    }
+    @foreach (var item in Model.Where(x => x.statusKind == MelkAria.Models.EnumMelkStatusKind.RahnAndEjare))
+    {
+        <div class="mix category-c" data-order="3">
+            <figure class="card card_category">
+                <a class="card-image" href="/Home/Single?name=@item.title.Replace(' ', '-')"><img src="@item.imageUrl" alt="@item.title"></a>
+                <figcaption class="card-body">
+                    <a class="fs-20 card-title" href="#">@item.title</a>
+                    <p class="card-text">@item.description</p><span class="card_price">@item.price تومان</span>
+                    <hr class="card_line">
+                    <ul class="list_info">
+                        <li> <span>طبقه</span><i>@item.floorCount</i></li>
+                        <li><span>متراژ</span><i>@item.metraj</i></li>
+                        <li><span>اتاق</span><i>@item.roomCount</i></li>
+                    </ul>
+                </figcaption>
+            </figure>
+        </div>
+    }*@
+<script src="~/Content/HomeVendors/js/mixitup.js"></script>

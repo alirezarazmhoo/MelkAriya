@@ -1,0 +1,59 @@
+﻿
+@model MelkAria.ViewModels.melk.additionalInfoViewModel
+
+<div class="main" role="main">
+    <div id="content" class="content full">
+        <div class="container">
+            <div class="page">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="block-heading" id="additionalinfo">
+                            <a href="#amenities" class="btn btn-sm btn-default pull-right">وارد کردن عکس <i class="fa fa-chevron-down"></i></a>
+                            <h4><span class="heading-icon"><i class="fa fa-plus"></i></span>عکس های بیشتر</h4>
+                        </div>
+                        <div class="padding-as25 margin-30 lgray-bg">
+
+                            
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4">
+                                    <lable>رمز عبور</lable>
+                                    <input id="password" name="password" class="form-control" />
+                                </div>
+
+                                <div class="text-align-center" id="submit-property">
+                                    <button type="button" onclick="RegisterSubmitUser()" class="btn btn-primary btn-lg"><i class="fa fa-check"></i> ثبت </button>
+                                </div>
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function RegisterSubmitUser() {
+        var password = $("#password").val();
+        
+        $.ajax({
+            url: "/Home/AddmelkWithNewUser?melkId=" +@Model.id+"&password=" + password ,
+            method: "POST",
+           
+            
+            success: function (data) {
+                
+                if (data== "Fail") {
+                    swal("خطا", "پسورد نا معتبر است ملک شما ثبت نشد لطفا مجددا ثبت نمایید", "warning");
+                    window.location.href='@Url.Action("Index", "Home")';
+                }
+                $("#content").html(data);
+                $('html,body').animate({
+                    scrollTop: $("#content").offset().top
+                }, 'slow');
+            },
+            error: function () {
+                alert("Ajax call failed");
+            }
+        })
+    }
+</script>

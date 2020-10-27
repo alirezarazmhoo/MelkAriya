@@ -1,0 +1,161 @@
+﻿@model MelkAria.ViewModels.User.UpdateProfileViewModel
+@{
+    ViewBag.Title = "User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">کاربر</h4>
+        <div class="card-demo">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جستجو</h4>
+                    <div class="row" id="SearchUser">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>نام </label>
+                                <input type="text" class="form-control" id="NameSearch" name="NameSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>نام خانوادگی</label>
+                                <input type="text" class="form-control" id="FamilySearch" name="FamilySearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>شماره همراه</label>
+                                <input type="text" class="form-control" id="MobileSearch" name="MobileSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>نام کاربری</label>
+                                <input type="text" class="form-control" id="UserNameeSearch" name="UserNameeSearch" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+
+                                <button class="btn btn-success" onclick="SearchUser()"> جستجو</button>
+                                <button class="btn btn-info" onclick="ShowAllUser()"> نمایش همه</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">کاربر</h4>
+
+                <div id="UserBody" class="table-responsive">
+                    @Html.Action("LoadUserData", "Admin")
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-User-confirm" tabindex="-1">
+    <div class="modal-dialog modal-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="User-header" class="modal-title pull-left">تایید کاربر</h5>
+            </div>
+            <div class="modal-body">
+                <form id="UserConfirm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="PageNumber" />
+                    @Html.TextBoxFor(m => m.Id, new { type = "hidden", @class = "form-control" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new { disabled = "disabled", placeholder = "نام ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Family)
+                        @Html.TextBoxFor(m => m.Family, new { disabled = "disabled", placeholder = "نام خانوادگی ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Family, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    
+                   
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Mobile)
+                        @Html.TextBoxFor(m => m.Mobile, new { disabled = "disabled", placeholder = "شماره همراه ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Mobile, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UserNamee)
+                        @Html.TextBoxFor(m => m.UserNamee, new { disabled = "disabled", placeholder = "نام کاربری ", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.UserNamee, "", new { @class = "validationMessage" })
+                        <i class="form-group__bar"></i>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-link">ذخیره</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">بستن</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+@section scripts{
+
+    
+    <script>
+                $('#modal-User-confirm').on('hidden.bs.modal', function () {
+                    $('#modal-User-confirm').find('input,textarea,select').each(function (key) {
+                        if ($(this).attr('id') == "ID") {
+                            $(this).val(0);
+                        }
+                        else
+                            if ($(this).attr('name') != '__RequestVerificationToken')
+                                $(this).val('');
+                    })
+                })
+
+    </script>
+    <script>
+                function SearchUser() {
+                    $("#UserBody").html('');
+                    var Name = $("#SearchUser #NameSearch").val();
+                    var Family = $("#SearchUser #FamilySearch").val();
+                    var Mobile = $("#SearchUser #MobileSearch").val();
+                    $.ajax({
+                        url: "/Admin/LoadUserData",
+                        method: "GET",
+                        data: {
+                            name: Name,
+                            family: Family,
+                            mobile: Mobile,
+                        },
+
+                        success: function (data) {
+                            $("#UserBody").html(data);
+                        }
+                    });
+                }
+                function ShowAllUser()
+                {
+                    $("#UserBody").html('');
+                    $('#SearchUser').find('input,textarea,select').each(function () {
+
+                        $(this).val('');
+                    })
+                    $("#UserBody").load('@Url.Action("LoadUserData")');
+                }
+    </script>
+
+}

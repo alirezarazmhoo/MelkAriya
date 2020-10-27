@@ -1,0 +1,229 @@
+﻿@model MelkAria.ViewModels.Home.HomeViewModel
+@{
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<section class="p-0" id="sectionSlider">
+    <div class="swiper-container" id="slideShow" data-items="1" data-effect="fade">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img class="swiper-lazy" src="/Content/HomeVendors/images/d39428d7.jpg">
+                @*<h2 class="slide_text">
+                        مشاور املاک آریا
+                        <br />
+                        <br />
+                        اولین مشاور املاک کاملا الکترونیک درشهرستان شهرضا
+                    </h2>*@
+            </div>
+        </div>
+    </div>
+    <button class="swiper-next next_slider"><i class="icon-chevron-right"></i></button>
+    <button class="swiper-prev prev_slider"><i class="icon-chevron-left"></i></button>
+</section>
+<section id="sectionFrom">
+    <div class="container">
+        <form class="form_filter" onsubmit="return Search2(event)" id="FormSearch">
+            <div class="form-group col-md-6">
+                <label for="address">محدوده جغرافیایی</label><i class="material-icons">add_location</i>
+                <input class="form-control" id="address" name="address" type="text" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="fromPrice">از قیمت</label><i class="material-icons">credit_card</i>
+                <input class="form-control" id="fromPrice" name="fromPrice" type="text" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="toPrice">تا قیمت</label><i class="material-icons">credit_card</i>
+                <input class="form-control" id="toPrice" name="toPrice" type="text" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="toPrice">کد ملک</label><i class="material-icons">credit_card</i>
+                <input class="form-control" id="code" name="code" type="text" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group col-md-3">
+                <label for="RoomCount">تعداد اتاق خواب</label><i class="material-icons">domain</i>
+                <select class="custom-select" id="RoomCount" name="RoomCount">
+                    <option value=""> انتخاب کنید </option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="form-group col-md-5">
+                <label for="kind">نوع ملک</label><i class="material-icons">domain</i>
+                <select class="custom-select" id="kind" name="kind">
+                    <option value=""> انتخاب کنید </option>
+                    @foreach (var item in Enum.GetValues(typeof(MelkAria.Models.EnumMelkKind)))
+                    {
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Edari))
+                        {
+                            <option value="2"> اداری </option>
+                        }
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Maskooni))
+                        {
+                            <option value="3"> مسکونی </option>
+                        }
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Tejari))
+                        {
+                            <option value="1"> تجاری </option>
+                        }
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Apartment))
+                        {
+                            <option value="4"> آپارتمان </option>
+                        }
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Zamin))
+                        {
+                            <option value="5"> زمین </option>
+                        }
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Sanati))
+                        {
+                            <option value="6"> صنعتی </option>
+                        }
+                        if (item.Equals(MelkAria.Models.EnumMelkKind.Keshavarzi))
+                        {
+                            <option value="7"> کشاورزی </option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn_default mt-auto" @*onclick="Search()"*@>جستجو</button>
+            </div>
+        </form>
+    </div>
+</section>
+<nav class="list_filter d-table mr-auto ml-auto">
+    <div class="more_view more-view-index d-flex justify-content-center">
+        <a class="btn mixitup-control-active waves-effect waves-light" href="/Home/RegisterMelk?israhn=true"> ایجاد آگهی رهن و اجاره</a>
+        <a class="btn mixitup-control-active waves-effect waves-light" href="/Home/RegisterMelk?israhn=false"> ایجاد آگهی خرید و فروش</a>
+    </div>
+</nav>
+<section id="sectionCategory">
+    <div class="container">
+        <h4 class="title_page text-center mb-4">لیست املاک</h4>
+        <nav class="list_filter d-table mr-auto ml-auto mb-5">
+            <button class="btn" type="button" data-filter="all" data-mixitup-control>همه</button>
+            <button class="btn" type="button" data-filter=".catRahn" data-mixitup-control>رهن و اجاره</button>
+            <button class="btn" type="button" data-filter=".catFroosh" data-mixitup-control>خرید و فروش</button>
+            @*<button class="btn" type="button" data-filter=".category-b" data-mixitup-control>رهن</button>
+                <button class="btn" type="button" data-filter=".category-c" data-mixitup-control>رهن و اجاره</button>*@
+        </nav>
+        <div class="grid-fill-300 gap-2" id="container">
+            @Html.Action("LoadMelksData", "Home")
+        </div>
+        <div class="more_view mt-5 d-flex justify-content-center"><a class="btn btn_default" id="content"> مشاهده بیشتر</a></div>
+    </div>
+
+
+
+</section>
+
+
+
+
+<section id="sectionCategory" class="lgray-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <h3>اعتبار کسب شده ؛ تضمین معاملات ملکی شماست.</h3>
+
+                <div class="padding-as25 lgray-bg" style="font-size:10px;">
+                    <p class="big">
+املاک اجلاس ، متن تست
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="sectionCategory" class="lgray-bg">
+    <div class="container">
+        <div class="col-md-12 col-sm-12 col-lg-12">
+
+            <div class="row " style="padding:5px">
+                <div class="col-md-4 col-sm-12 ">
+                    <img src="~/Content/HomeVendors/images/IMG-20200929-WA0007.jpg" style="width:auto;height:auto;max-height:250px;border-radius:8px;margin:2px" />
+                </div>
+                <div class="col-md-4 col-sm-12 ">
+                    <img src="~/Content/HomeVendors/images/IMG-20200929-WA0008.jpg" style="width:auto;height:auto;max-height:250px;border-radius:8px;margin:2px" />
+                </div>
+                <div class="col-md-4 col-sm-12 ">
+                    <img src="~/Content/HomeVendors/images/IMG-20200929-WA0009.jpg" style="width:auto;height:auto;max-height:250px;border-radius:8px;margin:2px" />
+                </div>
+
+            </div>
+            </div>
+        </div>
+</section>
+
+@section scripts
+{
+
+    @if (TempData["Message"] == "Registered")
+    {
+        <script>
+
+            swal("انجام شد", "باموفقیت ثبت نام شد", "success");
+
+        </script>
+    }
+    else if (TempData["Message"] == "DublicateMobile")
+    {
+        <script>
+            swal("خطا", "شماره همراه تکراری است", "warning");
+
+        </script>
+    }
+    else if (TempData["Message"] == "IncorrectInput")
+    {
+        <script>
+            swal("خطا", "ورودی ها نا معتبر است", "warning");
+
+        </script>
+    }
+    <script>
+        $(document).ready(function () {
+            var countpage = 2;
+
+            $('#content').click(function (e) {
+                var attr = $(".list_filter>.mixitup-control-active").attr("data-filter");
+                var statusKind = null;
+                if (attr == ".category-a")
+                    statusKind = 3;
+                if (attr == ".category-b")
+                    statusKind = 2;
+                if (attr == ".category-c")
+                    statusKind = 1;
+                var form = $("#FormSearch").serialize() + "&page=" + countpage + "" + "&statusKind=" + statusKind + "";
+                $.ajax({
+                    url: "/Home/LoadMelksData",
+                    method: "GET",
+                    data: form,
+                    success: function (data) {
+                        $("#container").append(data);
+                    }
+                });
+                countpage++;
+
+            });
+
+        });
+        function Search2(event) {
+            event.preventDefault();
+            $("#container").html('');
+            $.ajax({
+                url: "/Home/LoadMelksData",
+                method: "GET",
+                data: $("#FormSearch").serialize(),
+                success: function (data) {
+                    $("#container").html(data);
+                }
+            });
+        }
+    </script>
+}

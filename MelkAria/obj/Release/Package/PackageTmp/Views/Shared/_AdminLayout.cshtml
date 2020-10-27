@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="مشاور املاک،املاک آریا،املاک شهرضا" />
+    <meta name="description" content="مشاور املاک آریا در صنف مشاوران املاک شهرستان شهرضا" />
+    <meta name="google" content="notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">*@
+    <link href="~/Content/vendors/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet" />
+    <link href="~/Content/vendors/animate.css/animate.min.css" rel="stylesheet" />
+    <link href="~/Content/vendors/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+    <link href="~/Content/vendors/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/Content/CSS/app.min.css" rel="stylesheet" />
+    <link href="~/Content/CSS/MyStyle.css" rel="stylesheet" />
+    <link href="~/Content/vendors/jquery.scrollbar/jquery.scrollbar.css" rel="stylesheet" />
+    <link href='https://api.cedarmaps.com/cedarmaps.js/v1.8.0/cedarmaps.css' rel='stylesheet' />
+    <link rel="shortcut icon" type="image/png" href="~/Content/IMG/icon.jpeg">
+
+    @*@Styles.Render("~/bundles/AdminCSS")*@
+    @Scripts.Render("~/bundles/AdminJS")
+
+
+    @RenderSection("csss", required: false)
+</head>
+
+<body data-sa-theme="1">
+    <div class="page-loader">
+        <div class="page-loader__spinner">
+            <svg viewBox="25 25 50 50">
+                <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    @{ var db = new MelkAria.DAL.DataBaseContext();
+        var Member = db.Users.Where(p => p.userNamee == User.Identity.Name).Select(p => new
+        {
+            p.name,
+            p.mobile,
+            p.family,
+
+        }).FirstOrDefault();
+        var MemberName = Member.name;
+        var MemberFamily = Member.family;
+    }
+    <main class="main">
+        <div class="page-loader">
+            <div class="page-loader__spinner">
+                <svg viewBox="25 25 50 50">
+                    <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+                </svg>
+            </div>
+        </div>
+
+        <header class="header">
+            <div class="navigation-trigger hidden-xl-up" data-sa-action="aside-open" data-sa-target=".sidebar">
+                <i class="zmdi zmdi-menu"></i>
+            </div>
+            <form id="signoutForm" action="/User/SignOutAdmin" method="post">
+
+                <div class="logo hidden-sm-down">
+                    <h1>پنل مدیریت  املاک</h1>
+                </div>
+            </form>
+
+
+
+
+            <ul class="top-nav">
+                <li class="hidden-xs-down" style="background-color:rgba(255,255,255,.08);padding: .5rem;">
+                    @*<img class="user__img" style="color:white;" src="@ImageUpload" alt="">*@
+
+                    <div class="user__name" style="float:left;">@MemberName &nbsp; @MemberFamily</div>
+                </li>
+                <li class="hidden-xs-down" alt="خروج">
+                    <a class="top-nav__themes" onclick="signoutForm.submit()">
+                        <i class="zmdi zmdi-long-arrow-return zmdi-hc-fw"></i>
+                    </a>
+                </li>
+
+            </ul>
+            <div class="clock hidden-md-down">
+                <div class="time" style="min-width: 100px;">
+                    <span class="time__hours"></span>
+                    <span class="time__min"></span>
+                    <span class="time__sec"></span>
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="scrollbar-inner">
+
+                <div class="user">
+                    <div class="user__info" style="color:white">
+                        @*<img class="user__img" style="color:white;" src="@ImageUpload" alt="">*@
+
+                        <div>
+                            <div class="user__name">@MemberName &nbsp; @MemberFamily</div>
+                            <div class="user__emali"><i class="fa fa-circle text-success"></i> آنلاین </div>
+                        </div>
+                    </div>
+
+                    <div class="dropdown-menu">
+                        @*<a class="dropdown-item" href="default.htm">مشاهده پروفایل</a>
+                            <a class="dropdown-item" href="default.htm">تنظیمات</a>*@
+                        @*<a class="dropdown-item" onclick="signoutForm.submit()">خروج</a>*@
+                    </div>
+                </div>
+
+                <ul class="navigation">
+                    @*<li class="navigation__sub   navigation__sub--toggled">
+                        <a style="background-color: rgba(255,255,255,.04);" href="default.htm"><i class="zmdi zmdi-account zmdi-hc-fw"></i>پروفایل</a>
+                        <ul>
+                            <li class="faqactive"><a href="@Url.Action("ChangePass", "Admin")">تغییر پسورد</a></li>
+                        </ul>
+                    </li>*@
+                    <li class="navigation__sub   navigation__sub--toggled">
+                        <a style="background-color: rgba(255,255,255,.04);" href="default.htm"><i class="zmdi zmdi-account zmdi-hc-fw"></i>کاربران</a>
+                        <ul>
+
+                            <li class="faqactive" style="position:relative">
+                                <a href="@Url.Action("UserView", "Admin")">کاربران </a>
+
+                                @*<span class="pull-left-container" style="position: absolute;left: 10px;top: 50%;margin-top: -7px;">
+                                        <span class="label label-primary pull-left" style="float: left !important;background-color: #3c8dbc !important;display: inline;padding: .2em .6em .3em;font-size: 75%;color: #fff;border-radius: .25em;">@NewUser</span>
+                                    </span>*@
+
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="navigation__sub   navigation__sub--toggled">
+                        <a style="background-color: rgba(255,255,255,.04);" href="default.htm"><i class="zmdi zmdi-money-box zmdi-hc-fw"></i>اطلاعات پایه</a>
+                        <ul>
+                            @*<li class="faqactive"><a href="@Url.Action("city", "Admin")">استان</a></li>*@
+                            <li class="faqactive"><a href="@Url.Action("rule", "Admin")">قوانین</a></li>
+                            <li class="faqactive"><a href="@Url.Action("melkstatus", "Admin")">وضعیت منزل</a></li>
+
+                            <li class="faqactive"><a href="@Url.Action("contactUs", "Admin")">ارتباط با ما</a></li>
+                            <li class="faqactive"><a href="@Url.Action("aboutUs", "Admin")">درباره ما</a></li>
+
+                        </ul>
+                    </li>
+                    
+                    
+                    <li class="navigation__sub   navigation__sub--toggled">
+                        <a style="background-color: rgba(255,255,255,.04);" href="default.htm"><i class="zmdi zmdi-money-box zmdi-hc-fw"></i>املاک</a>
+                        <ul>
+                            <li class="faqactive"><a href="@Url.Action("melk", "Admin")">املاک</a></li>
+                        </ul>
+                    </li>
+                    @*<li class="navigation__sub   navigation__sub--toggled">
+                        <a style="background-color: rgba(255,255,255,.04);" href="default.htm"><i class="zmdi zmdi-money-box zmdi-hc-fw"></i>تماس با ما کاربران</a>
+                        <ul>
+                            <li class="faqactive"><a href="@Url.Action("contactUsUser", "Admin")">تماس با ما کاربران</a></li>
+                            <li class="faqactive"><a href="@Url.Action("offendReport", "Admin")">گزارش خرابی</a></li>
+                        </ul>
+                    </li>*@
+                    
+                    <li class=" navigation__sub--active">
+                        <a class="dropdown-item" onclick="signoutForm.submit()">خروج</a>
+                    </li>
+
+            </div>
+        </aside>
+
+
+
+        <section class="content">
+            <div class="content__inner">
+                @RenderBody()
+                <footer class="footer hidden-xs-down" style="background-color:#222d32;color:white">
+                    <div style="width:100%;text-align:center;direction:rtl">
+                        <div>       © تمام حقوق این سایت برای شرکت  املاک (.ir) محفوظ است</div>
+                        <span>طراحی و توسعه</span>
+                        <a style="" target="_blank" href="http://www.atrincom.com">
+                            آترین فناوران
+                        </a>
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </main>
+
+
+    @RenderSection("scripts", required: false)
+    <script src="~/Content/vendors/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+    
+
+    <script defer>
+        $(document).ready(function () {
+
+            $('.scrollbar-inner').scrollbar();
+        });
+        $(document).ajaxStop(function () {
+            $('.page-loader').hide();
+        });
+
+        $(document).ajaxStart(function () {
+            $('.page-loader').show();
+        });
+        $(document).ajaxComplete(function () {
+            $('.page-loader').hide();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+﻿@model MelkAria.ViewModels.melk.LoadmelkDataViewModel
+
+@{
+    int npage = Model.TotalNumber;
+    int i = 1;
+}
+<nav>
+    <ul class="pagination">
+        @{
+
+            @*<li class="page-item pagination-first"><a class="page-link" href="#"></a></li>*@
+            @*<li class="page-item pagination-prev"><a class="page-link" href="#"></a></li>*@
+            while (npage > 0)
+            {
+                if (i == 1)
+                {
+                    <li class="page-item active"><a class="page-link" onclick="ChangePage(@i,this)">@i</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" onclick="ChangePage(@i,this)">@i</a></li>
+
+                }
+                i++;
+                npage -= 10;
+            }
+
+
+            @*<li class="page-item pagination-next"><a class="page-link" onclick="AddPage(@i,this)"></a></li>*@
+            @*<li class="page-item pagination-last"><a class="page-link" href="#"></a></li>*@
+        }
+    </ul>
+</nav>
+<div class="contacts row">
+    @foreach (var item in Model.melks)
+    {
+        var a = item.status == MelkAria.Models.EnumStatus.Accept ? "background-color:#28a745" : "";
+
+        <div class="col-md-3 col-sm-4 col-6">
+            <div class="contacts__item" style="@a">
+                <a class="contacts__img">
+                    <img src="@item.imageUrl" alt="">
+                </a>
+
+                <div class="contacts__info">
+                    <small>تاریخ ایجاد:@item.pCreateDate</small>
+                    @if (item.status == MelkAria.Models.EnumStatus.Accept)
+                    {
+                        <span>وضعیت :تایید شده</span>
+                    }
+                    @if (item.status == MelkAria.Models.EnumStatus.NotAccept)
+                    {
+                        <span>وضعیت :تایید نشده</span>
+
+                    }
+                    @if (item.status == MelkAria.Models.EnumStatus.Pending)
+                    {
+                        <span>وضعیت :در انتظار تایید</span>
+
+                    }
+                    <span>تعداد بازدید:@item.ViewCount</span>
+                    <span>کد:@item.code</span>
+
+                </div>
+                @{
+                    if (item.IsRahn)
+                    {
+                    <button class="btn btn-primary" onclick="window.location.href='/Admin/newmelk/@item.id?israhn=true'">ویرایش و مشاهده</button>
+
+					}
+					else
+					{
+
+                <button class="btn btn-primary" onclick="window.location.href='/Admin/newmelk/@item.id'">ویرایش و مشاهده</button>
+					}
+                }
+                <button data-id="@item.id" name="Accept-melk" class="btn btn-primary" data-toggle="modal">تایید</button>
+                <div style="margin-top: 5px;">
+                    <button data-id="@item.id" name="Delete-melk" class="btn btn-primary" data-toggle="modal">حذف</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function SendToWhatsApp(e) {
+        $.ajax({
+                        url: "/Admin/SendMelkToWhatsApp?ID=" + e,
+                        method: "POST",
+                        success: function (data) {
+                            window.open(encodeURI("https://web.whatsapp.com/send?text=" + data),'_blank')
+                        }
+
+                    })
+
+    }
+    $("button[name='Accept-melk']").click(function (e) {
+        $("#car-header").html("تایید ملک");
+        var Id = $(this).attr("data-id");
+        var pagenumber = $('.pagination').find('.page-item.active').find('.page-link').html();
+
+
+        $.ajax({
+            url: "/Admin/Getmelk?ID=" + Id + "",
+            method: "Get",
+            dataType: "json",
+            success: function (data) {
+                if (data.ID != 0) {
+                    $("#confirmDescription").val(data.confirmDescription);
+                    $("#status").val(data.status);
+                    $("#id").val(data.id);
+                    $("#PageNumber").val(pagenumber);
+                    $(function () {
+                        $('#melkConfirm #confirmDescriptiondiv').hide();
+                        if ($('#status').val() == '3') {
+                            $('#melkConfirm #confirmDescriptiondiv').show();
+                        } else {
+                            $('#melkConfirm #confirmDescriptiondiv').hide();
+                        }
+                    });
+                    $('#modal-car-confirm').modal('show');
+                }
+                else {
+                    alert("ID is incorrect");
+                }
+            },
+            error: function () {
+                alert("Ajax call failed");
+            }
+        })
+    })
+
+    $("button[name='Delete-melk']").click(function (e) {
+                    var Id = $(this).attr("data-id");
+                    swal({
+                        title: ' مطمئن هستید؟',
+                        text: 'آیا از حذف رکورد انتخابی اطمینان دارید؟!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        confirmButtonClass: 'btn btn-danger',
+                        confirmButtonText: '! بله ',
+                        cancelButtonClass: 'btn btn-light',
+                        background: 'rgba(0, 0, 0, 0.96)'
+                    }).then(function () {
+                        $.ajax({
+                            url: "/Admin/Deletemelk?ID=" + Id + "",
+                            method: "POST",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data == "Failed") {
+                                    swal({
+                                        title: 'خطا...',
+                                        text: 'قادر به حذف رکورد نمی باشد!',
+                                        type: 'warning',
+                                        buttonsStyling: false,
+                                        confirmButtonClass: 'btn btn-sm btn-light',
+                                        background: 'rgba(0, 0, 0, 0.96)'
+                                    })
+                                }
+                                else {
+
+                                    swal({
+                                        title: '!  موفقیت آمیز',
+                                        text: 'حذف مورد انتخابی با موفقیت انجام شد',
+                                        type: 'success',
+                                        buttonsStyling: false,
+                                        confirmButtonClass: 'btn btn-sm btn-light',
+                                        background: 'rgba(0, 0, 0, 0.96)'
+                                    })
+                                    $('.pagination').find('.page-item').first().addClass('active');
+                                    $("#melkBody").load('@Url.Action("LoadmelkData")?page=' + 1);
+
+                                }
+                            },
+                            error: function () {
+                                alert("Failed");
+                            }
+                            })
+                        });
+
+    });
+</script>
+<script>
+    function ChangePage(PageNumber, e) {
+                    //$(e).parent().parent().find('.page-item').removeClass('active');
+                    //$(e).parent().addClass('active');
+                    $("#melkBody").html('');
+                    //$(".page-loader").show();
+                    $("#melkBody").load('@Url.Action("LoadmelkData")?page=' + PageNumber, function () {
+                        $("#melkBody").find('.pagination').find('.page-item').removeClass('active');
+                        $("#melkBody").find('.pagination').find('li:nth-child(' + PageNumber + ')').addClass('active');
+                    });
+                }
+</script>

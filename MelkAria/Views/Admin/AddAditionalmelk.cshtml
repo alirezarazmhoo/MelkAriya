@@ -1,0 +1,232 @@
+﻿@model MelkAria.ViewModels.melk.additionalInfoViewModel
+@{
+    ViewBag.Title = "melk";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var lon = 51.6650002;
+    var lat = 32.6707877;
+
+}
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">اطلاعات دیگر املاک</h4>
+
+        <div class="card-demo">
+            <div class="card">
+                <div class="col-md-12">
+                    <div id='map' style='width: 800px; height: 500px;'></div>
+
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">عکس و ویدئو</h4>
+                    @using (Html.BeginForm("UploadFiles", "Admin", new { id = Model.id, lon = lon, lat = lat }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.TextBoxFor(m => m.melk.lon, new { type = "hidden", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.melk.lat, new { type = "hidden", @class = "form-control" })
+                        <div class="form-horizontal">
+                            <hr />
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.files, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple" })
+                                    @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="ثبت عکس و نقشه" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        @foreach (var item in Model.photos)
+                        {
+                            <div class="col-md-3" id="@item.id">
+                                <i class='zmdi zmdi-close-circle zmdi-hc-fw' onclick='deletePhoto(@item.id)' style="cursor:pointer"></i>
+                                <a href="@item.file" style="padding-bottom: 10px;">
+                                    @{
+                                        int pos = item.file.LastIndexOf(".") + 1;
+                                        var exFile = item.file.Substring(pos, item.file.Length - pos);
+                                        if (exFile == "flv" || exFile == "avi" || exFile == "mov" || exFile == "mp4" || exFile == "mpg" || exFile == "wmv" || exFile == "3gp" || exFile == "asf")
+                                        {
+                                            <video src="@item.file" style="width: 100%;height:100%;" controls />
+                                        }
+                                        else
+                                        {
+                                            <image src="@item.file" style="width: 100%;height: 100%;" />
+
+                                        }
+                                    }
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src='https://api.cedarmaps.com/cedarmaps.js/v1.8.0/cedarmaps.js'></script>
+    <div id="results">
+        <h2 style="text-align: center;">Click somewhere on the map!</h2>
+        @*<div id="loading"><img src="../dist/v1.8.0/images/loading-14-blue.gif" width="14" height="14"> Loading...</div>*@
+        <div id="latlng"></div>
+        <div id="parsed-response"></div>
+        <div id="raw-response"></div>
+    </div>
+    <script>
+
+    
+
+    $("#lon").val(@Model.melk.lon);
+    $("#lat").val(@Model.melk.lat);
+    try {
+        L.cedarmaps.accessToken = "ed604cd5b75ac67631f9071a5c01963e7080c17a";
+    }
+    catch (err) {
+        throw new Error('You need to get an access token to be able to use cedarmaps SDK. ' +
+            'Send us an email to <info@cedar.ir>');
+    }
+
+    var tileJSONUrl = 'https://api.cedarmaps.com/v1/tiles/cedarmaps.streets.json?access_token=' + L.cedarmaps.accessToken,
+        marker,
+        syntaxHighlight;
+
+    // Initializing our map
+    var map = L.cedarmaps.map('map', tileJSONUrl, {
+        scrollWheelZoom: true
+    }).addControl(L.cedarmaps.geocoderControl('cedarmaps.streets', {
+        keepOpen: false,
+        autocomplete: true
+    })).setView(['@Model.melk.lat', '@Model.melk.lon'], 15);
+
+    // Setting up our DOM elements.
+    var resultsContainer = document.getElementById('results'),
+        latLngContainer = document.getElementById('latlng'),
+        parsedResponseContainer = document.getElementById('parsed-response'),
+        rawResponseContainer = document.getElementById('raw-response'),
+        loadingIndicator = document.getElementById('loading');
+
+    // We need to introduce our index to geocoder module. "cedarmaps.streets" in this case.
+    var geocoder = L.cedarmaps.geocoder('cedarmaps.streets');
+
+    map.on('click', function (e) {
+        if (marker) map.removeLayer(marker);
+        marker = new L.marker(e.latlng).addTo(map);
+        lon = e.latlng.lng;
+        lat = e.latlng.lat;
+        $("#lon").val(lon);
+        $("#lat").val(lat);
+        loading.style.visibility = 'visible';
+        latLngContainer.innerHTML = 'LatLng: ' + e.latlng.lat + ', ' + e.latlng.lng;
+
+        geocoder.reverseQuery(e.latlng, function callback(err, res) {
+            loading.style.visibility = 'hidden';
+            parsedResponseContainer.style.display = 'block';
+            rawResponseContainer.style.display = 'block';
+
+            var parsedResponse = '<ul>' +
+                '<li><strong>استان:</strong> ' + res.result.province + '</li>' +
+                '<li><strong>شهر:</strong> ' + res.result.city + '</li>' +
+                '<li><strong>محله:</strong> ' + res.result.locality + '</li>' +
+                '<li><strong>خیابان:</strong> ' + res.result.address + '</li>' +
+                '<li><strong>در منطقه طرح ترافیک:</strong> ' + (res.result.traffic_zone.in_central ? 'بله' : 'خیر') + '</li>' +
+                '<li><strong>در منطقه زوج و فرد:</strong> ' + (res.result.traffic_zone.in_evenodd ? 'بله' : 'خیر') + '</li>' +
+                '</ul>';
+            var rawResponse = '<pre class="language-javascript">' + syntaxHighlight(JSON.stringify(res, undefined, 2)) + '</pre>'
+
+            //parsedResponseContainer.innerHTML = parsedResponse;
+            //rawResponseContainer.innerHTML = rawResponse;
+
+        });
+    });
+
+    syntaxHighlight = function (json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+    var myIcon = L.icon({
+        iconUrl: '//api.cedarmaps.com/cedarmaps.js/v1.8.0/images/marker-icon.png',
+        //iconRetinaUrl: '//api.cedarmaps.com/cedarmaps.js/v1.8.0/images/marker-icon.png',
+        iconSize: [34, 46],
+        iconAnchor: [17, 41],
+        popupAnchor: [-3, -46],
+        //shadowUrl: '//api.cedarmaps.com/cedarmaps.js/v1.8.0/images/marker-icon.png',
+        //shadowRetinaUrl: '//api.cedarmaps.com/cedarmaps.js/v1.8.0/images/marker-icon.png',
+        shadowSize: [26, 6],
+        shadowAnchor: [13, 3]
+    });
+
+    var marker = new L.marker(['@Model.melk.lat', '@Model.melk.lon'], {
+        icon: myIcon
+    }).addTo(map);
+
+    var popupOptions = {
+        offset: new L.Point(2, 14),
+        closeButton: false,
+        autoPan: false
+    };
+    marker.bindPopup('@Model.melk.title', popupOptions).openPopup();
+    </script>
+    <script>
+
+        function deletePhoto(id) {
+            $.ajax({
+                url: "/Admin/DeletePhoto/" + id,
+                method: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data == "Done") {
+                        $("div#" + id + "").remove();
+                        swal({
+                            title: '!  موفقیت آمیز',
+                            text: "عکس مورد نظر حذف شد",
+                            type: 'success',
+                            buttonsStyling: false,
+                            confirmButtonClass: 'btn btn-sm btn-light',
+                            background: 'rgba(0, 0, 0, 0.96)'
+                        })
+                    }
+                    else {
+                        swal({
+                            title: '!  خطا',
+                            text: "خطایی رخ داده است",
+                            type: 'warning',
+                            buttonsStyling: false,
+                            confirmButtonClass: 'btn btn-sm btn-light',
+                            background: 'rgba(0, 0, 0, 0.96)'
+                        })
+                    }
+                },
+                error: function () {
+                    alert("Failed");
+
+                }
+            })
+        }
+
+
+    </script>
+
+}

@@ -1,0 +1,76 @@
+﻿@model MelkAria.ViewModels.contactUs.contactUsViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content__inner content__inner--sm">
+    <header class="content__title">
+        <h1>ارتباط با ما</h1>
+    </header>
+
+    <div class="card new-contact">
+        <form action="~/Admin/UpdatecontactUs" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input hidden id="id" value="@Model.id" name="id" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.phone)
+                            @Html.TextBoxFor(m => m.phone, new { placeholder = "تلفن", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.phone, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.pageTelegramUrl)
+                            @Html.TextBoxFor(m => m.pageTelegramUrl, new { placeholder = "آدرس صفحه تلگرام ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.pageTelegramUrl, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.pageInstagramUrl)
+                            @Html.TextBoxFor(m => m.pageInstagramUrl, new { placeholder = "آدرس صفحه اینستاگرام ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.pageInstagramUrl, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.pageTwitterUrl)
+                            @Html.TextBoxFor(m => m.pageTwitterUrl, new { placeholder = "آدرس صفحه توییتر ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.pageTwitterUrl, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.siteName)
+                            @Html.TextBoxFor(m => m.siteName, new { placeholder = "آدرس وب سایت ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.siteName, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.email)
+                            @Html.TextBoxFor(m => m.email, new { placeholder = "ایمیل ", @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.email, "", new { @class = "validationMessage" })
+                            <i class="form-group__bar"></i>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="clearfix"></div>
+                <div class="mt-5 text-center">
+                    <button type="submit" class="btn btn-primary">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

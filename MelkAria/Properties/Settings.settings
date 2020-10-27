@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MelkAria.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MelkAria_irpayamakservice_SendService" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://payamak-service.ir/SendService.svc</Value>
+    </Setting>
+    <Setting Name="MelkAria_com_irpayamak_login_Send" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://login.irpayamak.com/api/send.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
